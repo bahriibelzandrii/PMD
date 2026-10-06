@@ -299,6 +299,7 @@ class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
           ],
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _addNewTask,
         backgroundColor: const Color(0xFFD4FF00),
