@@ -1,90 +1,146 @@
-# Лабораторна робота №1
-
-**Тема:** «Створення Flutter-проєкту та ознайомлення зі структурою застосунку»  
-**Дисципліна:** Програмування мобільних додатків (ПМД)  
-**Студент:** Багрій-Белз Андрій, група КН-2327Б  
-**Варіант:** 1 («Менеджер завдань»)  
-
----
-
-## 🎯 Мета роботи
-Навчитися встановлювати середовище розробки Android Studio та Flutter SDK, створювати Flutter-проєкт, аналізувати структуру застосунку та виконувати перший запуск.
+# ЗВІТ
+про виконання лабораторної роботи №1  
+«Створення Flutter-проєкту та ознайомлення зі структурою застосунку»  
+з дисципліни «Програмування мобільних додатків»  
+Студента групи КН-2327Б  
+**Багрія-Белза Андрія**  
 
 ---
 
-## 🛠 Хід виконання роботи
-
-### 1. Встановлення Android Studio та компонентів SDK
-- Встановлено офіційне IDE Android Studio.
-- Через SDK Manager налаштовано:
-  - Android SDK Platform
-  - Android SDK Build-Tools (версія 36.0.0)
-  - Android Virtual Device (AVD) та Android SDK Command-line Tools
-
-### 2. Встановлення Flutter SDK та верифікація (`flutter doctor`)
-- Розгорнуто стабільний реліз Flutter SDK (Channel stable, 3.47.2).
-- Шлях до директорії `bin` додано до системної змінної `PATH`.
-- Виконано комплексну діагностику утилітою `flutter doctor`:
-  ```bash
-  $ flutter doctor
-  Doctor summary:
-  [✓] Flutter (Channel stable, 3.47.2, on Microsoft Windows 11, locale uk-UA)
-  [✓] Windows Version (Windows 11 or higher)
-  [✓] Android toolchain - develop for Android devices (Android SDK version 36.0.0)
-  [✓] Chrome - develop for the web
-  [✓] Visual Studio - develop Windows apps (Visual Studio Build Tools 2022)
-  [✓] Connected device (3 available)
-  [✓] Network resources
-  • No issues found!
-  ```
-
-### 3. Створення Flutter-проєкту за Варіантом 1
-- Створено проєкт з назвою відповідно до теми варіанту («Менеджер завдань»):
-  ```bash
-  flutter create task_manager --org com.taskmaster --project-name task_manager
-  ```
-- **Аналіз структури застосунку:**
-  - `android/` — нативна конфігурація для ОС Android, маніфест `AndroidManifest.xml` та сценарії збірки `build.gradle.kts`.
-### 4. Налаштування емулятора та запуск застосунку
-- У Device Manager запущено віртуальний пристрій Android 16 (API 36 / `emulator-5554`, профіль `lab20`).
-- Виконано компіляцію, інсталяцію та успішний запуск налагоджувального пакета `app-debug.apk` безпосередньо на емуляторі.
-- Проведено верифікацію роботи UI: оновлення лічильника завдань при відмітці виконання (з 3/5 до 4/5), взаємодію з модальним вікном додавання нового завдання та діалогом «Про застосунок».
-- Запущено набір автоматизованих тестів: `flutter test` — усі перевірки пройдені успішно.
-
-### 5. Розробка коду застосунку «Менеджер завдань»
-- Реалізовано інтерфейс з відображенням списку задач, відміткою виконання, підрахунком прогресу та додаванням нового завдання через діалогове вікно.
-- Програма виконана у стильній темній темі з фірмовим акцентом Cyber Neon (`#D4FF00`).
-- Вихідний код розташований у `Lab_1/task_manager/lib/main.dart`.
+**Завдання:** Встановити Android Studio та Flutter SDK, створити Flutter-проєкт згідно Варіанту 1 («Менеджер завдань»), налаштувати емулятор та виконати запуск застосунку.
 
 ---
 
-## ❓ Відповіді на контрольні запитання
+### 1 Написання коду-розв’язку завдання:
+Вихідний код розташований у `Lab_1/task_manager/lib/main.dart`:
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const TaskManagerApp());
+}
+
+class TaskManagerApp extends StatelessWidget {
+  const TaskManagerApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Менеджер завдань',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFD4FF00),
+          brightness: Brightness.dark,
+          primary: const Color(0xFFD4FF00),
+          surface: const Color(0xFF15181F),
+        ),
+        scaffoldBackgroundColor: const Color(0xFF0D0F13),
+      ),
+      home: const TaskManagerHomePage(title: 'Менеджер завдань'),
+    );
+  }
+}
+
+class TaskItem {
+  final String title;
+  final String category;
+  bool isCompleted;
+  TaskItem({required this.title, required this.category, this.isCompleted = false});
+}
+
+class TaskManagerHomePage extends StatefulWidget {
+  final String title;
+  const TaskManagerHomePage({super.key, required this.title});
+
+  @override
+  State<TaskManagerHomePage> createState() => _TaskManagerHomePageState();
+}
+
+class _TaskManagerHomePageState extends State<TaskManagerHomePage> {
+  final List<TaskItem> _tasks = [
+    TaskItem(title: 'Встановити Android Studio та Flutter SDK', category: 'Навчання', isCompleted: true),
+    TaskItem(title: 'Налаштувати емулятор Android', category: 'Навчання', isCompleted: true),
+    TaskItem(title: 'Створити Flutter-проєкт для Варіанту 1', category: 'ПМД Лаб 1', isCompleted: true),
+    TaskItem(title: 'Оформити звіт з лабораторної роботи №1', category: 'ПМД Лаб 1', isCompleted: true),
+    TaskItem(title: 'Підготувати відповіді на контрольні запитання', category: 'ПМД Лаб 1', isCompleted: false),
+  ];
+
+  int get _completedCount => _tasks.where((t) => t.isCompleted).length;
+
+  void _toggleTask(int index) {
+    setState(() {
+      _tasks[index].isCompleted = !_tasks[index].isCompleted;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title), centerTitle: true),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Text('Варіант 1: Менеджер завдань ($_completedCount / ${_tasks.length})'),
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _tasks.length,
+                itemBuilder: (context, i) => Card(
+                  child: ListTile(
+                    leading: Checkbox(value: _tasks[i].isCompleted, onChanged: (_) => _toggleTask(i)),
+                    title: Text(_tasks[i].title),
+                    subtitle: Text(_tasks[i].category),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {},
+        backgroundColor: const Color(0xFFD4FF00),
+        foregroundColor: const Color(0xFF0B0D11),
+        icon: const Icon(Icons.add),
+        label: const Text('Додати завдання'),
+      ),
+    );
+  }
+}
+```
+
+---
+
+### 2 Результат виконання коду:
+- Діагностика середовища розробки: `Lab_1/assets/doctor_terminal.png`
+- Запуск застосунку на Android-емуляторі (Android 16 / API 36): `Lab_1/assets/emulator_duo_tasks.png`
+
+---
+
+### Контрольні запитання:
 
 1. **Що таке Flutter та для чого він використовується?**  
-   *Flutter* — це відкритий кросплатформний UI-фреймворк від компанії Google, призначений для швидкої розробки компільованих високопродуктивних застосунків для Android, iOS, Windows, macOS, Linux та Web з єдиної кодової бази мовою Dart. Він використовує власний графічний рушій (Impeller/Skia) для прямого рендерингу пікселів на полотні екрана.
+Flutter — це відкритий кросплатформний UI-фреймворк від компанії Google, призначений для створення компільованих застосунків для мобільних систем (Android, iOS), настільних ОС та Web на основі єдиної кодової бази мовою Dart.
 
 2. **Яке призначення Flutter SDK?**  
-   *Flutter SDK* містить повний набір інструментів: компілятор Dart (AOT для випуску та JIT з гарячим перезавантаженням для розробки), базові бібліотеки віджетів Material Design та Cupertino, командний рядок (`flutter CLI`), засоби профайлінгу та платформенні мости для взаємодії з нативним API.
+Flutter SDK містить компілятор мови Dart, набір базових віджетів Material Design та Cupertino, утиліти командного рядка (flutter CLI) та інструменти для налагодження й збірки проєкту.
 
 3. **Що таке віджет у Flutter?**  
-   *Віджет (Widget)* — це базовий незмінний будівельний блок користувацького інтерфейсу. У Flutter усе є віджетом: елементи розмітки (`Column`, `Row`, `Padding`), графічні компоненти (`Text`, `Image`, `Checkbox`) та логіка стилю (`Theme`). Базові типи: `StatelessWidget` (статичний вміст) та `StatefulWidget` (динамічний вміст із внутрішнім станом, що оновлюється через `setState`).
+Віджет — це базовий будівельний блок інтерфейсу у Flutter. Вони поділяються на StatelessWidget (незмінні віджети без власного стану) та StatefulWidget (динамічні віджети зі станом, який оновлюється за допомогою виклику setState).
 
 4. **Яку роль виконує Android Studio під час розробки Flutter-застосунків?**  
-   *Android Studio* надає інтегровані інструменти розробки: інтелектуальний редактор коду з підтримкою плагінів Flutter/Dart, візуальний диспетчер віртуальних пристроїв (Device Manager), керування наборами Android SDK, інспектор дерева віджетів (Flutter Inspector) та засоби налагодження.
+Android Studio слугує інтегрованим середовищем розробки (IDE): надає зручний редактор коду з підсвічуванням та автодоповненням, засоби керування Android SDK, емулятори пристроїв (Device Manager) та підтримку швидкого перезавантаження (Hot Reload).
 
-5. **Для чого використовується команда `flutter doctor`?**  
-   Команда `flutter doctor` виконує повну системну діагностику робочого оточення. Вона перевіряє наявність встановленого SDK, інструментів Android та Visual Studio, ліцензійних угод, доступних емуляторів і фізичних пристроїв, виводячи перелік виявлених помилок і рекомендації щодо їх виправлення.
+5. **Для чого використовується команда flutter doctor?**  
+Команда виконує повну діагностику системи: перевіряє версію Flutter SDK, наявність і ліцензії Android SDK, засоби збірки під платформи та виявляє підключені пристрої й емулятори.
 
 6. **Яка структура стандартного Flutter-проєкту?**  
-   - `lib/` — головний каталог Dart-коду (`main.dart`).
-   - `android/`, `ios/`, `windows/`, `web/` — платформозалежні директорії для компіляції та налаштування нативних системних середовищ.
-   - `test/` — модульні та віджет-тести застосунку.
-   - `pubspec.yaml` — маніфест проєкту, опис залежностей, версійності та ресурсів.
-   - `build/` — каталог скомпільованих бінарних артефактів (ігнорується git).
+Каталог lib/ містить вихідний код мовою Dart (точка входу main.dart), каталоги android/ та ios/ — конфігурацію під нативні платформи, test/ — модульні та віджет-тести, а файл pubspec.yaml описує конфігурацію і залежності проєкту.
 
 ---
 
-## 📌 Згенеровані документи
-- 📄 **Звіт DOCX:** `Lab_1/ПМД_КН-2327Б_Багрій-Белз_ЛР-1.docx`
-- 📑 **Звіт PDF:** `Lab_1/ПМД_КН-2327Б_Багрій-Белз_ЛР-1.pdf`
-- 💻 **Проєкт Flutter:** `Lab_1/task_manager/`
+**Висновок:** На цій лабораторній роботі, я встановив Android Studio та Flutter SDK, створив перший проєкт за Варіантом 1 («Менеджер завдань»), налаштував емулятор і перевірив роботу застосунку.
