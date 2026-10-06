@@ -58,11 +58,11 @@
     {
       "type": "task",
       "number": 4,
-      "text": "Налаштування емулятора Android Virtual Device (AVD) та запуск тестів."
+      "text": "Налаштування емулятора Android Virtual Device (AVD) та тестування оточення."
     },
     {
       "type": "text",
-      "text": "У Device Manager середовища Android Studio налаштовано віртуальний емулятор пристрою Google Android (профіль lab20). Виконано команду опитування доступних емуляторів у Flutter та проведено автоматизоване тестування віджетів у середовищі flutter test."
+      "text": "У Device Manager середовища Android Studio налаштовано віртуальний емулятор пристрою Google Android (профіль lab20, sdk gphone64 x86_64, Android 16 / API 36). Виконано запуск емулятора, перевірку його готовності в списку підключених пристроїв та тестування віджетів."
     },
     {
       "type": "result",
@@ -75,21 +75,21 @@
     {
       "type": "task",
       "number": 5,
-      "text": "Розробка інтерфейсу застосунку «Менеджер завдань» (Варіант 1) та запуск програми."
+      "text": "Розробка інтерфейсу застосунку «Менеджер завдань» (Варіант 1) та запуск на Android-емуляторі."
     },
     {
       "type": "code",
-      "label": "1. Написання коду-розв'язку завдання (lib/main.dart):",
+      "label": "1. Написання вихідного коду головного файлу (lib/main.dart):",
       "numbered": false,
-      "text": "import 'package:flutter/material.dart';\n\nvoid main() {\n  runApp(const TaskManagerApp());\n}\n\nclass TaskManagerApp extends StatelessWidget {\n  const TaskManagerApp({super.key});\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Менеджер завдань',\n      debugShowCheckedModeBanner: false,\n      theme: ThemeData(\n        useMaterial3: true,\n        colorScheme: ColorScheme.fromSeed(\n          seedColor: const Color(0xFFD4FF00),\n          brightness: Brightness.dark,\n          primary: const Color(0xFFD4FF00),\n          surface: const Color(0xFF15181F),\n        ),\n        scaffoldBackgroundColor: const Color(0xFF0D0F13),\n      ),\n      home: const TaskManagerHomePage(title: 'Менеджер завдань'),\n    );\n  }\n}\n\nclass TaskItem {\n  final String title;\n  final String category;\n  bool isCompleted;\n  TaskItem({required this.title, required this.category, this.isCompleted = false});\n}\n\nclass TaskManagerHomePage extends StatefulWidget {\n  final String title;\n  const TaskManagerHomePage({super.key, required this.title});\n  @override\n  State<TaskManagerHomePage> createState() => _TaskManagerHomePageState();\n}\n\nclass _TaskManagerHomePageState extends State<TaskManagerHomePage> {\n  final List<TaskItem> _tasks = [\n    TaskItem(title: 'Встановити Android Studio та Flutter SDK', category: 'Навчання', isCompleted: true),\n    TaskItem(title: 'Налаштувати емулятор Android', category: 'Навчання', isCompleted: true),\n    TaskItem(title: 'Створити Flutter-проєкт для Варіанту 1', category: 'ПМД Лаб 1', isCompleted: true),\n    TaskItem(title: 'Оформити звіт з лабораторної роботи №1', category: 'ПМД Лаб 1', isCompleted: false),\n  ];\n  final TextEditingController _taskController = TextEditingController();\n  int get _completedCount => _tasks.where((t) => t.isCompleted).length;\n\n  void _toggleTask(int index) {\n    setState(() { _tasks[index].isCompleted = !_tasks[index].isCompleted; });\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(title: Text(widget.title), centerTitle: true),\n      body: Padding(\n        padding: const EdgeInsets.all(16.0),\n        child: Column(\n          children: [\n            Text('Варіант 1: Менеджер завдань ($_completedCount / ${_tasks.length})'),\n            Expanded(\n              child: ListView.builder(\n                itemCount: _tasks.length,\n                itemBuilder: (context, i) => Card(\n                  child: ListTile(\n                    leading: Checkbox(value: _tasks[i].isCompleted, onChanged: (_) => _toggleTask(i)),\n                    title: Text(_tasks[i].title),\n                    subtitle: Text(_tasks[i].category),\n                  ),\n                ),\n              ),\n            ),\n          ],\n        ),\n      ),\n    );\n  }\n}"
+      "text": "import 'package:flutter/material.dart';\n\nvoid main() {\n  runApp(const TaskManagerApp());\n}\n\nclass TaskManagerApp extends StatelessWidget {\n  const TaskManagerApp({super.key});\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Менеджер завдань',\n      debugShowCheckedModeBanner: false,\n      theme: ThemeData(\n        useMaterial3: true,\n        colorScheme: ColorScheme.fromSeed(\n          seedColor: const Color(0xFFD4FF00),\n          brightness: Brightness.dark,\n          primary: const Color(0xFFD4FF00),\n          surface: const Color(0xFF15181F),\n        ),\n        scaffoldBackgroundColor: const Color(0xFF0D0F13),\n      ),\n      home: const TaskManagerHomePage(title: 'Менеджер завдань'),\n    );\n  }\n}\n\nclass TaskItem {\n  final String title;\n  final String category;\n  bool isCompleted;\n  TaskItem({required this.title, required this.category, this.isCompleted = false});\n}\n\nclass TaskManagerHomePage extends StatefulWidget {\n  final String title;\n  const TaskManagerHomePage({super.key, required this.title});\n  @override\n  State<TaskManagerHomePage> createState() => _TaskManagerHomePageState();\n}\n\nclass _TaskManagerHomePageState extends State<TaskManagerHomePage> {\n  final List<TaskItem> _tasks = [\n    TaskItem(title: 'Встановити Android Studio та Flutter SDK', category: 'Навчання', isCompleted: true),\n    TaskItem(title: 'Налаштувати емулятор Android', category: 'Навчання', isCompleted: true),\n    TaskItem(title: 'Створити Flutter-проєкт для Варіанту 1', category: 'ПМД Лаб 1', isCompleted: true),\n    TaskItem(title: 'Оформити звіт з лабораторної роботи №1', category: 'ПМД Лаб 1', isCompleted: true),\n    TaskItem(title: 'Підготувати відповіді на контрольні запитання', category: 'ПМД Лаб 1', isCompleted: false),\n  ];\n  final TextEditingController _taskController = TextEditingController();\n  int get _completedCount => _tasks.where((t) => t.isCompleted).length;\n\n  void _toggleTask(int index) {\n    setState(() { _tasks[index].isCompleted = !_tasks[index].isCompleted; });\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(title: Text(widget.title), centerTitle: true),\n      body: Padding(\n        padding: const EdgeInsets.all(16.0),\n        child: Column(\n          children: [\n            Text('Варіант 1: Менеджер завдань ($_completedCount / ${_tasks.length})'),\n            Expanded(\n              child: ListView.builder(\n                itemCount: _tasks.length,\n                itemBuilder: (context, i) => Card(\n                  child: ListTile(\n                    leading: Checkbox(value: _tasks[i].isCompleted, onChanged: (_) => _toggleTask(i)),\n                    title: Text(_tasks[i].title),\n                    subtitle: Text(_tasks[i].category),\n                  ),\n                ),\n              ),\n            ),\n          ],\n        ),\n      ),\n    );\n  }\n}"
     },
     {
       "type": "result",
-      "label": "2. Результат виконання коду та функціонування застосунку:",
+      "label": "2. Результат тестування та запуску застосунку на Android-емуляторі (Android 16 / API 36):",
       "numbered": false,
       "images": [
-        "Lab_1/assets/app_running.png",
-        "Lab_1/assets/dialog_running.png"
+        "Lab_1/assets/emulator_duo_tasks.png",
+        "Lab_1/assets/emulator_duo_dialogs.png"
       ]
     },
     {
@@ -122,5 +122,5 @@
       "text": "6. Яка структура стандартного Flutter-проєкту?\nСтандартний Flutter-проєкт складається з таких обов'язкових вузлів: каталог lib/ з точкою входу main.dart (основний вихідний код застосунку); каталог test/ (автоматичні тести); каталоги нативних платформ android/, ios/, windows/, linux/, web/ (містять конфігураційні файли збірки Gradle/Xcode/CMake для відповідних цільових ОС); файл pubspec.yaml (конфігурація назви, версії, залежностей та медіа-асетів); та analysis_options.yaml (налаштування статичного аналізу коду)."
     }
   ],
-  "conclusion": "На цій лабораторній роботі я опанував процес розгортання та налаштування середовища розробки на базі Android Studio та Flutter SDK, навчився діагностувати стан системи за допомогою інструменту flutter doctor. Я створив кросплатформний мобільний проєкт під Варіант 1 («Менеджер завдань»), детально проаналізував архітектурну структуру директорій та конфігураційних файлів застосунку, успішно реалізував інтерфейс користувача з відстеженням завдань та виконав тестування і запуск програми."
+  "conclusion": "На цій лабораторній роботі я опанував процес розгортання та налаштування середовища розробки на базі Android Studio та Flutter SDK, навчився діагностувати стан системи за допомогою інструменту flutter doctor. Я створив кросплатформний мобільний проєкт під Варіант 1 («Менеджер завдань»), детально проаналізував архітектурну структуру директорій та конфігураційних файлів застосунку, успішно реалізував інтерфейс користувача з відстеженням завдань, запустив та всебічно протестував його на емуляторі Android 16 (API 36)."
 }
