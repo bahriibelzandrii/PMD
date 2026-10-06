@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Оптимізація запитів до бази даних",
+    "isFavorite": true,
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "title": "Рефакторинг архітектури Flutter-екранів",
+    "isFavorite": false,
+    "status": "done"
+  },
+  {
+    "id": 3,
+    "title": "Інтеграція REST API та обробка помилок",
+    "isFavorite": false,
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "title": "Написання віджет-тестів та перевірка стану",
+    "isFavorite": true,
+    "status": "done"
+  },
+  {
+    "id": 5,
+    "title": "Оновлення темної палітри кольорів Material 3",
+    "isFavorite": false,
+    "status": "active"
+  },
+  {
+    "id": 6,
+    "title": "Підготовка збірки та публікація в Play Store",
+    "isFavorite": false,
+    "status": "active"
+  }
+]
