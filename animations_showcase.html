@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskMaster — Каталог Анімацій та Мікровзаємодій (Flutter Motion Design)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #08090B;
+      --bg-card: #15181F;
+      --bg-card-subtle: #1C2029;
+      --bg-phone: #0D0F13;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-highlight: #D4FF00;
+      --text-main: #FFFFFF;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --accent-primary: #D4FF00;
+      --accent-primary-text: #08090B;
+      --accent-secondary: #00F0FF;
+      --accent-purple: #A855F7;
+      --glow-accent: 0 0 24px rgba(212, 255, 0, 0.28);
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --transition-speed: 1;
+    }
+
+    /* THEME: Pastel Noir */
+    [data-theme="pastel-noir"] {
+      --bg-page: #0E1013;
+      --bg-card: #1C2027;
+      --bg-card-subtle: #242932;
+      --bg-phone: #14171C;
+      --accent-primary: #FDA4AF;
+      --accent-secondary: #C4B5FD;
+      --border-highlight: #FDA4AF;
+      --glow-accent: 0 0 24px rgba(253, 164, 175, 0.25);
+    }
+
+    /* THEME: Bento Mint */
+    [data-theme="bento-mint"] {
+      --bg-page: #0C0D10;
+      --bg-card: #1F2229;
+      --bg-card-subtle: #272C35;
+      --bg-phone: #16181D;
+      --accent-primary: #86EFAC;
+      --accent-secondary: #FEF08A;
+      --border-highlight: #86EFAC;
+      --glow-accent: 0 0 24px rgba(134, 239, 172, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 32px 24px 80px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(212, 255, 0, 0.08), transparent 70%),
+        radial-gradient(circle at 90% 80%, rgba(0, 240, 255, 0.04), transparent 60%);
+      background-attachment: fixed;
+    }
+
+    /* Top Studio Bar */
+    .showcase-header {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .top-nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      border-color: var(--border-highlight);
+      color: var(--accent-primary);
+      transform: translateX(-2px);
+    }
+
+    .header-title-block h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge-pill {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: rgba(212, 255, 0, 0.12);
+      color: var(--accent-primary);
+      border: 1px solid rgba(212, 255, 0, 0.3);
+    }
+
+    .header-title-block p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-top: 6px;
+      max-width: 800px;
+      line-height: 1.5;
+    }
+
+    /* Global Motion Controls */
+    .motion-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 14px 20px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toolbar-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .speed-btn-group {
+      display: flex;
+      background: var(--bg-card-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .speed-btn {
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .speed-btn.active {
+      background: var(--accent-primary);
+      color: var(--accent-primary-text);
+      box-shadow: 0 0 10px rgba(212, 255, 0, 0.3);
+    }
+
+    .tool-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .tool-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    /* Main Showcase Grid */
+    .showcase-grid {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* Category Section */
+    .category-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .category-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .category-desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Variant Cards Container */
+    .variants-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+
+    .variant-card {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      transition: border-color 0.25s ease;
+    }
+
+    .variant-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Selected vs Alt Card States */
+    .variant-card.selected {
+      border-color: rgba(212, 255, 0, 0.42);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 24px rgba(212, 255, 0, 0.09);
+      background: linear-gradient(180deg, rgba(212, 255, 0, 0.03) 0%, var(--bg-card-subtle) 100%);
+    }
+    .selected-pill {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--accent-primary);
+      background: rgba(212, 255, 0, 0.14);
+      border: 1px solid rgba(212, 255, 0, 0.35);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .alt-pill {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    /* Approved Stack Banner */
+    .approved-stack-card {
+      background: linear-gradient(135deg, rgba(212, 255, 0, 0.08) 0%, rgba(0, 240, 255, 0.05) 50%, var(--bg-card) 100%);
+      border: 1.5px solid rgba(212, 255, 0, 0.38);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 32px rgba(212, 255, 0, 0.08);
+    }
+    .approved-badge-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .approved-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .approved-item {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+    .approved-item-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 4px;
+    }
+    .approved-item-num strong {
+      color: #FFFFFF;
+      background: rgba(212, 255, 0, 0.22);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(212, 255, 0, 0.35);
+    }
+    .approved-item-desc {
+      font-size: 0.73rem;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+    .approved-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .approved-play-btn {
+      background: var(--accent-primary);
+      color: var(--accent-primary-text);
+      font-weight: 800;
+      border: none;
+      padding: 9px 20px;
+    }
+    .approved-play-btn:hover {
+      background: #FFFFFF;
+      color: #000000;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.4);
+    }
+
+    .variant-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .variant-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .curve-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .variant-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .variant-desc {
+      font-size: 0.76rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Live Interactive Sandbox Box */
+    .sandbox-stage {
+      height: 180px;
+      background: var(--bg-phone);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .stage-btn-trigger {
+      padding: 7px 16px;
+      border-radius: var(--radius-full);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .stage-btn-trigger:hover {
+      background: var(--accent-primary);
+      color: var(--accent-primary-text);
+      box-shadow: var(--glow-accent);
+    }
+
+    /* Flutter Spec Code Accordion */
+    .flutter-spec-box {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: #A5B4FC;
+      line-height: 1.45;
+      overflow-x: auto;
+    }
+
+    .flutter-spec-box .kw { color: #F43F5E; }
+    .flutter-spec-box .type { color: #38BDF8; }
+    .flutter-spec-box .val { color: var(--accent-primary); }
+
+    /* =========================================================
+       SPECIFIC ANIMATION DEMO ELEMENTS & KEYFRAMES
+       ========================================================= */
+
+    /* 1A: Shared Axis Slide */
+    .screen-slide-box {
+      width: 140px;
+      height: 100px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      gap: 6px;
+      transition: transform calc(0.45s / var(--transition-speed)) cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity calc(0.45s / var(--transition-speed)) ease;
+    }
+    .screen-slide-box.animating {
+      transform: translateX(40px) scale(0.92);
+      opacity: 0;
+    }
+
+    /* 1B: Hero Container Expansion */
+    .hero-expand-card {
+      width: 100px;
+      height: 50px;
+      background: linear-gradient(135deg, rgba(212, 255, 0, 0.15), rgba(0, 240, 255, 0.15));
+      border: 1.5px solid var(--accent-primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      transition: all calc(0.5s / var(--transition-speed)) cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+    }
+    .hero-expand-card.expanded {
+      width: 220px;
+      height: 120px;
+      border-radius: 18px;
+      box-shadow: 0 0 25px rgba(212, 255, 0, 0.3);
+      font-size: 0.9rem;
+    }
+
+    /* 1C: Fade Through Scale */
+    .fade-scale-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transition: all calc(0.35s / var(--transition-speed)) cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .fade-scale-icon.switch {
+      transform: scale(0.6);
+      opacity: 0;
+    }
+
+    /* 2A: Rubber-Band Spring Button */
+    .bouncy-btn {
+      padding: 12px 24px;
+      border-radius: var(--radius-full);
+      background: var(--accent-primary);
+      color: var(--accent-primary-text);
+      font-weight: 800;
+      font-size: 0.85rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(212, 255, 0, 0.3);
+      transition: transform calc(0.35s / var(--transition-speed)) cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .bouncy-btn:active, .bouncy-btn.pressed {
+      transform: scale(0.88);
+    }
+
+    /* 2B: Luminous Glow Pulse */
+    .glow-pulse-btn {
+      padding: 12px 24px;
+      border-radius: var(--radius-full);
+      background: var(--bg-card);
+      border: 1.5px solid var(--accent-secondary);
+      color: var(--accent-secondary);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      position: relative;
+    }
+    .glow-pulse-btn.pulsing {
+      animation: neonPulse calc(0.8s / var(--transition-speed)) cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes neonPulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); }
+      70% { box-shadow: 0 0 0 24px rgba(0, 240, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); }
+    }
+
+    /* 2C: Morphing Checkbox */
+    .morph-check-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all calc(0.3s / var(--transition-speed)) cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .morph-check-circle.checked {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      transform: scale(1.15);
+      box-shadow: 0 0 16px rgba(212, 255, 0, 0.4);
+    }
+    .morph-check-circle svg {
+      stroke: var(--accent-primary-text);
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+      transition: stroke-dashoffset calc(0.3s / var(--transition-speed)) ease 0.1s;
+    }
+    .morph-check-circle.checked svg {
+      stroke-dashoffset: 0;
+    }
+
+    /* 3A: Confetti Burst Canvas */
+    #confettiCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* 3B: Task Strikethrough & Fade Slide */
+    .task-demo-card {
+      width: 220px;
+      padding: 12px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all calc(0.4s / var(--transition-speed)) cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .task-demo-card.completed {
+      opacity: 0.35;
+      transform: translateX(20px);
+      text-decoration: line-through;
+    }
+
+    /* 3C: Radial Progress Count-Up */
+    .ring-svg-circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset calc(0.8s / var(--transition-speed)) cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 4A: Staggered Cascade List */
+    .stagger-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 220px;
+    }
+    .stagger-item {
+      padding: 8px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 1;
+      transform: translateY(0);
+      transition: all calc(0.4s / var(--transition-speed)) cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .stagger-item.out {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    /* 5A: Fluid Bottom Sheet */
+    .sheet-drawer {
+      position: absolute;
+      bottom: -100px;
+      width: 200px;
+      height: 130px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px 18px 0 0;
+      box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.5);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform calc(0.4s / var(--transition-speed)) cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .sheet-drawer.open {
+      transform: translateY(-90px);
+    }
+    .sheet-handle {
+      width: 32px;
+      height: 4px;
+      border-radius: var(--radius-full);
+      background: var(--border-subtle);
+      margin-bottom: 8px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .showcase-header { margin-bottom: 24px; }
+      .variants-row { grid-template-columns: 1fr; }
+      .motion-toolbar { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body data-theme="cyber-neon">
+
+  <!-- =============================================================
+       HEADER & TOP TOOLBAR
+       ============================================================= -->
+  <header class="showcase-header">
+    <div class="top-nav-row">
+      <a href="design_prototype.html" class="back-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span>← До Симулятора Екранів</span>
+      </a>
+      <div style="display: flex; gap: 8px;">
+        <span class="badge-pill">Flutter Animation Framework</span>
+        <span class="badge-pill" style="border-color: rgba(0, 240, 255, 0.3); color: var(--accent-secondary); background: rgba(0, 240, 255, 0.1);">60 FPS Optimized</span>
+      </div>
+    </div>
+
+    <div class="header-title-block">
+      <h1>
+        <span>✨ TaskMaster Motion Studio & Animation Specs</span>
+      </h1>
+      <p>
+        Інтерактивний каталог усіх мікровзаємодій, переходів та фізичних анімацій для Лабораторних 1-10. Кожен компонент містить кілька варіантів реалізації, криві Flutter (`Curves`), швидкість та готовий код віджетів.
+      </p>
+    </div>
+
+    <!-- Global Motion Controls -->
+    <div class="motion-toolbar">
+      <div class="toolbar-group">
+        <span class="toolbar-label">Швидкість:</span>
+        <div class="speed-btn-group">
+          <button class="speed-btn" onclick="setSpeed(0.25, this)">0.25x</button>
+          <button class="speed-btn" onclick="setSpeed(0.5, this)">0.5x</button>
+          <button class="speed-btn active" onclick="setSpeed(1.0, this)">1.0x (Норм)</button>
+          <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
+          <button class="speed-btn" onclick="setSpeed(2.0, this)">2.0x</button>
+        </div>
+      </div>
+
+      <div class="toolbar-group">
+        <span class="toolbar-label">Тема:</span>
+        <div class="speed-btn-group">
+          <button class="speed-btn active" onclick="setTheme('cyber-neon', this)">⚡ Cyber Neon</button>
+          <button class="speed-btn" onclick="setTheme('pastel-noir', this)">🎨 Pastel Noir</button>
+          <button class="speed-btn" onclick="setTheme('bento-mint', this)">🍱 Bento Mint</button>
+        </div>
+      </div>
+
+      <div class="toolbar-group">
+        <button class="tool-btn" onclick="replayAllDemos()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          <span>Запустити всі демо</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =============================================================
+       ANIMATION CATEGORIES SHOWCASE
+       ============================================================= -->
+  <main class="showcase-grid">
+
+    <!-- Approved Stack Summary Card -->
+    <div class="approved-stack-card">
+      <div class="approved-badge-head">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="selected-pill">🎯 ЗАТВЕРДЖЕНИЙ СТЕК АНІМАЦІЙ</span>
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-main);">Вибір для розробки Лабораторних 1–10</span>
+        </div>
+        <span style="font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">Статус: Схвалено розробником</span>
+      </div>
+      <div class="approved-grid">
+        <div class="approved-item">
+          <div class="approved-item-num">1. Переходи: <strong>A + B</strong></div>
+          <div class="approved-item-desc">Shared Axis Slide + Hero Container Expand</div>
+        </div>
+        <div class="approved-item">
+          <div class="approved-item-num">2. Кнопки: <strong>A + C</strong></div>
+          <div class="approved-item-desc">Spring Bouncy Press + Morphing Checkbox</div>
+        </div>
+        <div class="approved-item">
+          <div class="approved-item-num">3. Святкування: <strong>A + C</strong></div>
+          <div class="approved-item-desc">Повільний Confetti Blast (Gentle Float) + Count-Up Ring</div>
+        </div>
+        <div class="approved-item">
+          <div class="approved-item-num">4. Списки та шторки: <strong>A + B</strong></div>
+          <div class="approved-item-desc">Cascade Fade Up + Fluid Bottom Sheet Drag</div>
+        </div>
+      </div>
+      <div class="approved-actions">
+        <button class="tool-btn approved-play-btn" onclick="playApprovedStack()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>Відтворити затверджений стек</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- CATEGORY 1: SCREEN TRANSITIONS -->
+    <section class="category-section">
+      <div class="category-header">
+        <div>
+          <h2 class="category-title">
+            <span>1. Переходи між екранами та роутинг (Screen Transitions)</span>
+            <span class="badge-pill">Лабораторна 3 & 4</span>
+          </h2>
+          <p class="category-desc">Безшовна зміна контексту при переході між дашбордом, проєктами та деталями завдань.</p>
+        </div>
+      </div>
+
+      <div class="variants-row">
+        <!-- Variant A (SELECTED) -->
+        <div class="variant-card selected">
+          <div class="variant-meta">
+            <span class="selected-pill">✨ ОБРАНО: Варіант A</span>
+            <span class="curve-tag">Curves.easeOutCubic</span>
+          </div>
+          <h3 class="variant-title">Паралаксне ковзання сторінки</h3>
+          <p class="variant-desc">Горизонтальне ковзання зі зсувом 40px та плавним згасанням прозорості.</p>
+          <div class="sandbox-stage">
+            <div class="screen-slide-box" id="demo1A">
+              <div style="font-size: 0.75rem; font-weight: 800; color: var(--accent-primary);">📱 Екран 1</div>
+              <div style="font-size: 0.65rem; color: var(--text-muted);">Дашборд завдань</div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="runDemo1A()">▶ Відтворити перехід</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Тривалість: 450ms</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">PageRouteBuilder</span>(
+  transitionDuration: <span class="val">Duration(milliseconds: 450)</span>,
+  transitionsBuilder: (ctx, anim, _, child) =>
+    <span class="type">SlideTransition</span>(position: Tween(...).animate(
+      <span class="type">CurvedAnimation</span>(parent: anim, curve: <span class="val">Curves.easeOutCubic</span>)), child: child),
+)
+          </div>
+        </div>
+
+        <!-- Variant B (SELECTED) -->
+        <div class="variant-card selected">
+          <div class="variant-meta">
+            <span class="selected-pill">✨ ОБРАНО: Варіант B</span>
+            <span class="curve-tag">Curves.easeOutBack</span>
+          </div>
+          <h3 class="variant-title">Розкриття картки (Card Expand)</h3>
+          <p class="variant-desc">Плавне масштабування картки з канбану у повний екранний опис без розриву.</p>
+          <div class="sandbox-stage">
+            <div class="hero-expand-card" id="demo1B" onclick="toggleDemo1B()">
+              <span>Wireframes 3</span>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="toggleDemo1B()">▶ Перемкнути Hero</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Тривалість: 500ms</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">Hero</span>(
+  tag: <span class="val">'task-card-3'</span>,
+  child: <span class="type">AnimatedContainer</span>(
+    duration: <span class="val">Duration(milliseconds: 500)</span>,
+    curve: <span class="val">Curves.easeOutBack</span>,
+  ),
+)
+          </div>
+        </div>
+
+        <!-- Variant C (ALT) -->
+        <div class="variant-card">
+          <div class="variant-meta">
+            <span class="alt-pill">Альтернатива C</span>
+            <span class="curve-tag">Curves.easeInOutQuad</span>
+          </div>
+          <h3 class="variant-title">Масштабоване згасання</h3>
+          <p class="variant-desc">Легке зменшення до 0.85x з подальшим виринанням нового вмісту табів.</p>
+          <div class="sandbox-stage">
+            <div class="fade-scale-icon" id="demo1C">📊</div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="runDemo1C()">▶ Змінити іконку</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Тривалість: 350ms</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">AnimatedSwitcher</span>(
+  duration: <span class="val">Duration(milliseconds: 350)</span>,
+  transitionBuilder: (child, anim) =>
+    <span class="type">ScaleTransition</span>(scale: anim, child: <span class="type">FadeTransition</span>(opacity: anim, child: child)),
+)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORY 2: MICRO-INTERACTIONS & TOUCH FEEDBACK -->
+    <section class="category-section">
+      <div class="category-header">
+        <div>
+          <h2 class="category-title">
+            <span>2. Мікровзаємодії та Тактильний Фідбек (Micro-interactions)</span>
+            <span class="badge-pill">Лабораторна 1, 2, 6</span>
+          </h2>
+          <p class="category-desc">Жива реакція на дотики користувача, яка створює відчуття фізичного контролю.</p>
+        </div>
+      </div>
+
+      <div class="variants-row">
+        <!-- Variant A (SELECTED) -->
+        <div class="variant-card selected">
+          <div class="variant-meta">
+            <span class="selected-pill">✨ ОБРАНО: Варіант A</span>
+            <span class="curve-tag">Curves.elasticOut</span>
+          </div>
+          <h3 class="variant-title">Пружне стискання кнопки</h3>
+          <p class="variant-desc">Стискання кнопки до 0.88x при натисканні з миттєвим пружним відновленням.</p>
+          <div class="sandbox-stage">
+            <button class="bouncy-btn" id="demo2A" onmousedown="pressBtn(true)" onmouseup="pressBtn(false)">
+              Натисни мене! ⚡
+            </button>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="triggerBouncy()">▶ Тест кліку</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Тривалість: 350ms</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">GestureDetector</span>(
+  onTapDown: (_) => _ctrl.forward(),
+  onTapUp: (_) => _ctrl.reverse(),
+  child: <span class="type">ScaleTransition</span>(scale: Tween(begin: 1.0, end: 0.88).animate(_ctrl)),
+)
+          </div>
+        </div>
+
+        <!-- Variant B (ALT) -->
+        <div class="variant-card">
+          <div class="variant-meta">
+            <span class="alt-pill">Альтернатива B</span>
+            <span class="curve-tag">Curves.easeOutQuad</span>
+          </div>
+          <h3 class="variant-title">Неоновий імпульс (Pulse Aura)</h3>
+          <p class="variant-desc">Розширення світлового ореола при активації для кіберпанк-стилістики.</p>
+          <div class="sandbox-stage">
+            <button class="glow-pulse-btn" id="demo2B" onclick="triggerGlow()">
+              Активувати імпульс
+            </button>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="triggerGlow()">▶ Запустити пульс</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Тривалість: 800ms</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">BoxDecoration</span>(
+  boxShadow: [
+    BoxShadow(color: <span class="val">AppColors.neonCyan.withOpacity(0.6)</span>, blurRadius: _anim.value * 24),
+  ],
+)
+          </div>
+        </div>
+
+        <!-- Variant C (SELECTED) -->
+        <div class="variant-card selected">
+          <div class="variant-meta">
+            <span class="selected-pill">✨ ОБРАНО: Варіант C</span>
+            <span class="curve-tag">Curves.easeOutBack</span>
+          </div>
+          <h3 class="variant-title">Анімований чекбокс підзадач</h3>
+          <p class="variant-desc">Зміна кольору кола та плавне малювання галочки через штрих (SVG/Path draw).</p>
+          <div class="sandbox-stage">
+            <div class="morph-check-circle" id="demo2C" onclick="toggleCheckbox()">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="toggleCheckbox()">▶ Перемкнути стан</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Тривалість: 300ms</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">CustomPainter</span>(
+  paint: Paint()..strokeWidth = 3..style = PaintingStyle.stroke,
+  <span class="type">path.computeMetrics()</span>.extractPath(0, length * _anim.value),
+)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORY 3: TASK COMPLETION & CELEBRATION -->
+    <section class="category-section">
+      <div class="category-header">
+        <div>
+          <h2 class="category-title">
+            <span>3. Святковий фідбек завершення завдання (Celebration)</span>
+            <span class="badge-pill">Лабораторна 5, 6, 9</span>
+          </h2>
+          <p class="category-desc">Дофамінова винагорода за кожну закриту лабораторну чи завершений дедлайн.</p>
+        </div>
+      </div>
+
+      <div class="variants-row">
+        <!-- Variant A (SELECTED - SLOW CONFETTI) -->
+        <div class="variant-card selected">
+          <div class="variant-meta">
+            <span class="selected-pill">✨ ОБРАНО: Варіант A (Повільний)</span>
+            <span class="curve-tag">Slow Float (0.04g)</span>
+          </div>
+          <h3 class="variant-title">Повільний неоновий конфеті (Gentle Float)</h3>
+          <p class="variant-desc">Плавне невагоме ширяння частинок салюту на весь екран при завершенні завдання.</p>
+          <div class="sandbox-stage" id="confettiStage">
+            <canvas id="confettiCanvas"></canvas>
+            <button class="bouncy-btn" style="z-index: 2;" onclick="fireConfetti()">🎉 Здати Лабу!</button>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="fireConfetti()">▶ Запустити конфеті</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Частинок: 50+</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">ConfettiWidget</span>(
+  blastDirectionality: BlastDirectionality.explosive,
+  gravity: <span class="val">0.04</span>, // Плавне невагоме ширяння частинок
+  minBlastForce: <span class="val">2</span>,
+  maxBlastForce: <span class="val">5</span>,
+  emissionFrequency: <span class="val">0.02</span>,
+  colors: const [<span class="val">Color(0xFFD4FF00)</span>, <span class="val">Color(0xFF00F0FF)</span>, <span class="val">Color(0xFFFFFFFF)</span>],
+)
+        </div>
+        </div>
+
+        <!-- Variant B (ALT) -->
+        <div class="variant-card">
+          <div class="variant-meta">
+            <span class="alt-pill">Альтернатива B</span>
+            <span class="curve-tag">Curves.easeInOutCubic</span>
+          </div>
+          <h3 class="variant-title">Закреслення та зсув завдання</h3>
+          <p class="variant-desc">Картка перекреслюється, тьмяніє та зміщується вправо до списку виконаних.</p>
+          <div class="sandbox-stage">
+            <div class="task-demo-card" id="demo3B">
+              <span style="color: var(--accent-primary);">✓</span>
+              <span style="font-size: 0.8rem; font-weight: 700;">Звіт Лаб 4 (.pdf)</span>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="toggleTaskCard()">▶ Виконати завдання</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Тривалість: 400ms</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">Dismissible</span>(
+  key: Key(<span class="val">'task-4'</span>),
+  onDismissed: (dir) => markAsDone(),
+  child: <span class="type">TaskCardWidget</span>(),
+)
+          </div>
+        </div>
+
+        <!-- Variant C (SELECTED) -->
+        <div class="variant-card selected">
+          <div class="variant-meta">
+            <span class="selected-pill">✨ ОБРАНО: Варіант C</span>
+            <span class="curve-tag">Curves.easeOutCubic</span>
+          </div>
+          <h3 class="variant-title">Анімоване кільце успішності</h3>
+          <p class="variant-desc">Плавне заповнення дуги кільця та цифровий лічильник від 0% до 84%.</p>
+          <div class="sandbox-stage">
+            <div style="position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+              <svg width="80" height="80" viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="32" stroke="rgba(255,255,255,0.08)" stroke-width="6" fill="none"></circle>
+                <circle id="demo3CRing" class="ring-svg-circle" cx="40" cy="40" r="32" stroke="var(--accent-primary)" stroke-width="6" fill="none" stroke-dasharray="201" stroke-dashoffset="201" stroke-linecap="round"></circle>
+              </svg>
+              <span id="demo3CText" style="position: absolute; font-size: 0.95rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-primary);">0%</span>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="runProgressCountUp()">▶ Заповнити кільце</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Тривалість: 800ms</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">TweenAnimationBuilder</span>&lt;<span class="type">double</span>&gt;(
+  tween: Tween(begin: 0.0, end: 0.84),
+  duration: <span class="val">Duration(milliseconds: 800)</span>,
+  builder: (ctx, val, _) => <span class="type">CircularProgressIndicator</span>(value: val),
+)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORY 4: LIST ENTRANCE STAGGER -->
+    <section class="category-section">
+      <div class="category-header">
+        <div>
+          <h2 class="category-title">
+            <span>4. Каскадна поява списків (List Entrance Stagger)</span>
+            <span class="badge-pill">Лабораторна 4, 5, 8</span>
+          </h2>
+          <p class="category-desc">Поступова поява карток із мікрозатримкою для плавного першого враження.</p>
+        </div>
+      </div>
+
+      <div class="variants-row">
+        <!-- Variant A (SELECTED) -->
+        <div class="variant-card selected">
+          <div class="variant-meta">
+            <span class="selected-pill">✨ ОБРАНО: Варіант A</span>
+            <span class="curve-tag">40ms interval</span>
+          </div>
+          <h3 class="variant-title">Каскад знизу вгору</h3>
+          <p class="variant-desc">Кожен наступний елемент списку залітає із затримкою 40 мс.</p>
+          <div class="sandbox-stage">
+            <div class="stagger-container" id="staggerList">
+              <div class="stagger-item">📌 1. Захист Лаб 5 (ПМД)</div>
+              <div class="stagger-item">📌 2. Діаграма класів UML</div>
+              <div class="stagger-item">📌 3. Рефакторинг моделей</div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="runStagger()">▶ Відтворити каскад</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Затримка: 40ms/item</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">ListView.builder</span>(
+  itemBuilder: (ctx, idx) => <span class="type">SlideTransition</span>(
+    position: Tween(...).animate(CurvedAnimation(
+      parent: _ctrl, curve: Interval(idx * 0.1, 1.0, curve: Curves.easeOutCubic))),
+  ),
+)
+          </div>
+        </div>
+
+        <!-- Variant B (SELECTED) -->
+        <div class="variant-card selected">
+          <div class="variant-meta">
+            <span class="selected-pill">✨ ОБРАНО: Варіант B</span>
+            <span class="curve-tag">Curves.easeOutBack</span>
+          </div>
+          <h3 class="variant-title">Виринаюча модальна шторка</h3>
+          <p class="variant-desc">Пружне виринання знизу для створення завдань або налаштувань.</p>
+          <div class="sandbox-stage" style="align-items: flex-end;">
+            <div class="sheet-drawer" id="sheetDemo">
+              <div class="sheet-handle"></div>
+              <div style="font-size: 0.75rem; font-weight: 700;">Нове завдання</div>
+              <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 4px;">Створення у Лаб 7</div>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="stage-btn-trigger" onclick="toggleSheet()">▶ Відкрити/Закрити</button>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">Тривалість: 400ms</span>
+          </div>
+          <div class="flutter-spec-box">
+<span class="kw">showModalBottomSheet</span>(
+  context: context,
+  isScrollControlled: true,
+  builder: (ctx) => <span class="type">CreationBottomSheet</span>(),
+)
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Global speed multiplier
+    let speedMult = 1.0;
+
+    function setSpeed(spd, btn) {
+      speedMult = spd;
+      document.documentElement.style.setProperty('--transition-speed', spd);
+      document.querySelectorAll('.speed-btn-group .speed-btn').forEach(b => {
+        if (b.innerText.includes(spd + 'x') || (spd === 1 && b.innerText.includes('1.0x'))) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+      if (btn) {
+        btn.parentElement.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+    }
+
+    function setTheme(th, btn) {
+      document.body.setAttribute('data-theme', th);
+      btn.parentElement.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // 1A: Shared Axis
+    function runDemo1A() {
+      const el = document.getElementById('demo1A');
+      el.classList.add('animating');
+      setTimeout(() => {
+        el.classList.remove('animating');
+      }, 500 / speedMult);
+    }
+
+    // 1B: Hero Expand
+    function toggleDemo1B() {
+      const el = document.getElementById('demo1B');
+      el.classList.toggle('expanded');
+    }
+
+    // 1C: Fade Scale
+    let iconIdx = 0;
+    const icons = ['📊', '🔥', '🎯', '🚀'];
+    function runDemo1C() {
+      const el = document.getElementById('demo1C');
+      el.classList.add('switch');
+      setTimeout(() => {
+        iconIdx = (iconIdx + 1) % icons.length;
+        el.innerText = icons[iconIdx];
+        el.classList.remove('switch');
+      }, 350 / speedMult);
+    }
+
+    // 2A: Bouncy button
+    function pressBtn(isDown) {
+      const el = document.getElementById('demo2A');
+      if (isDown) el.classList.add('pressed');
+      else el.classList.remove('pressed');
+    }
+    function triggerBouncy() {
+      const el = document.getElementById('demo2A');
+      el.classList.add('pressed');
+      setTimeout(() => el.classList.remove('pressed'), 200 / speedMult);
+    }
+
+    // 2B: Glow pulse
+    function triggerGlow() {
+      const el = document.getElementById('demo2B');
+      el.classList.remove('pulsing');
+      void el.offsetWidth;
+      el.classList.add('pulsing');
+    }
+
+    // 2C: Morph Checkbox
+    function toggleCheckbox() {
+      const el = document.getElementById('demo2C');
+      el.classList.toggle('checked');
+    }
+
+    // 3A: Confetti Blast (Slow & Smooth Floating Physics - Approved)
+    function fireConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
+
+      const particles = [];
+      const colors = ['#D4FF00', '#00F0FF', '#FFFFFF', '#A855F7', '#38BDF8'];
+
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 4.2,
+          vy: -(Math.random() * 3.8 + 1.8),
+          size: Math.random() * 5 + 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1.0,
+          rot: Math.random() * 360,
+          dRot: (Math.random() - 0.5) * 2.8,
+          wobbleFreq: Math.random() * 0.05 + 0.02,
+          wobbleAmp: Math.random() * 0.8 + 0.4
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        particles.forEach(p => {
+          p.vx *= 0.988;
+          p.vy = Math.min(p.vy + 0.045 * speedMult, 1.4 * speedMult);
+          p.x += (p.vx + Math.sin(p.y * p.wobbleFreq) * p.wobbleAmp) * speedMult;
+          p.y += p.vy * speedMult;
+          p.alpha -= 0.006 * speedMult;
+          p.rot += p.dRot * speedMult;
+
+          if (p.alpha > 0) {
+            alive = true;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.alpha;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
+            ctx.restore();
+          }
+        });
+        if (alive) requestAnimationFrame(render);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      render();
+    }
+
+    // 3B: Task Card Complete
+    function toggleTaskCard() {
+      const el = document.getElementById('demo3B');
+      el.classList.toggle('completed');
+    }
+
+    // 3C: Radial Count Up
+    function runProgressCountUp() {
+      const ring = document.getElementById('demo3CRing');
+      const text = document.getElementById('demo3CText');
+      const totalLen = 201; // 2 * PI * 32
+      const targetPercent = 84;
+      const targetOffset = totalLen * (1 - targetPercent / 100);
+
+      ring.style.strokeDashoffset = totalLen;
+      text.innerText = '0%';
+
+      setTimeout(() => {
+        ring.style.strokeDashoffset = targetOffset;
+        let count = 0;
+        const interval = setInterval(() => {
+          count += 2;
+          if (count >= targetPercent) {
+            count = targetPercent;
+            clearInterval(interval);
+          }
+          text.innerText = count + '%';
+        }, (800 / (targetPercent / 2)) / speedMult);
+      }, 50);
+    }
+
+    // 4A: Stagger List
+    function runStagger() {
+      const items = document.querySelectorAll('#staggerList .stagger-item');
+      items.forEach(it => it.classList.add('out'));
+      items.forEach((it, idx) => {
+        setTimeout(() => {
+          it.classList.remove('out');
+        }, (idx * 60 + 50) / speedMult);
+      });
+    }
+
+    // 5A: Bottom Sheet
+    function toggleSheet() {
+      const sheet = document.getElementById('sheetDemo');
+      sheet.classList.toggle('open');
+    }
+
+    // Replay All
+    function replayAllDemos() {
+      runDemo1A();
+      toggleDemo1B();
+      runDemo1C();
+      triggerBouncy();
+      triggerGlow();
+      toggleCheckbox();
+      fireConfetti();
+      toggleTaskCard();
+      runProgressCountUp();
+      runStagger();
+      toggleSheet();
+    }
+
+    // Play Approved Stack (1A+1B, 2A+2C, 3A(slow)+3C, 4A+4B)
+    function playApprovedStack() {
+      runDemo1A();
+      setTimeout(toggleDemo1B, 200 / speedMult);
+      setTimeout(triggerBouncy, 400 / speedMult);
+      setTimeout(toggleCheckbox, 600 / speedMult);
+      setTimeout(runStagger, 800 / speedMult);
+      setTimeout(runProgressCountUp, 1000 / speedMult);
+      setTimeout(fireConfetti, 1200 / speedMult);
+    }
+  </script>
+</body>
+</html>
