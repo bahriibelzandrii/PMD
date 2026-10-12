@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "course_code": "ПМД",
+    "course_name": "Програмування мобільних додатків",
+    "lab_number": 8,
+    "topic": "Форми введення даних та навігація між екранами",
+    "author": "Багрія-Белз Андрій",
+    "group": "КН-2327Б",
+    "variant": null,
+    "objective": null,
+    "title_word": "ЗВІТ",
+    "title_style": "standard"
+  },
+  "body": [
+    {
+      "type": "task",
+      "text": "1. Створити екран реєстрації RegisterScreen.\n2. Реалізувати форму введення даних за допомогою віджета Form.\n3. Додати щонайменше такі обов'язкові поля введення: ім’я користувача, дата народження, email, пароль, підтвердження пароля.\n4. Для полів введення використати віджети TextFormField.\n5. Реалізувати перевірку правильності введених даних: усі поля не повинні бути порожніми; ім’я користувача повинно містити не менше 2–3 символів; дата народження має мати перевірку на коректний формат дати; email повинен містити символ @; пароль повинен містити не менше 6 символів; поле підтвердження пароля повинно збігатися з паролем.\n6. Використати екземпляри TextEditingController для зчитування введених значень та своєчасного їх звільнення у dispose().\n7. Додати стилізовану кнопку «Зареєструватися» (ElevatedButton).\n8. Реалізувати навігацію з RegisterScreen на HomeScreen.\n9. Передати на екран HomeScreen ім’я користувача та додаткові дані реєстрації.\n10. Відобразити на екрані HomeScreen текст привітання, наприклад: «Вітаємо, Ім’я!».\n11. Використати Navigator.push() або Navigator.pushReplacement() для переходу між екранами.\n12. Оформити інтерфейс екранів із використанням Scaffold, AppBar, Padding, Column.\n13. Перевірити, що перехід на HomeScreen виконується лише після успішної валідації форми (_formKey.currentState!.validate())."
+    },
+    {
+      "type": "code",
+      "label": "1 Написання коду-розв’язку завдання:",
+      "numbered": false,
+      "text": "// === lib/main.dart ===\nimport 'package:flutter/material.dart';\n\nimport 'screens/welcome_screen.dart';\n\nvoid main() {\n  runApp(const RegistrationApp());\n}\n\nclass RegistrationApp extends StatelessWidget {\n  const RegistrationApp({super.key});\n\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Форми та навігація — Лабораторна №8',\n      debugShowCheckedModeBanner: false,\n      theme: ThemeData(\n        useMaterial3: true,\n        brightness: Brightness.dark,\n        scaffoldBackgroundColor: const Color(0xFF0D0F13),\n        colorScheme: const ColorScheme.dark(\n          primary: Color(0xFFD4FF00),\n          surface: Color(0xFF15181F),\n          onSurface: Colors.white,\n        ),\n      ),\n      home: const WelcomeScreen(),\n    );\n  }\n}\n\n// === lib/screens/register_screen.dart (фрагмент) ===\nimport 'package:flutter/material.dart';\n\nimport 'task_manager_screen.dart';\n\n/// Екран реєстрації користувача RegisterScreen (п. 1 ТЗ)\nclass RegisterScreen extends StatefulWidget {\n  const RegisterScreen({super.key});\n\n  @override\n  State<RegisterScreen> createState() => _RegisterScreenState();\n}\n\nclass _RegisterScreenState extends State<RegisterScreen> {\n  // Ключ форми для централізованої валідації (п. 2 ТЗ)\n  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();\n\n  // TextEditingController для кожного поля форми (п. 6 ТЗ)\n  final TextEditingController _usernameController = TextEditingController();\n  final TextEditingController _birthDateController = TextEditingController();\n  final TextEditingController _emailController = TextEditingController();\n  final TextEditingController _passwordController = TextEditingController();\n  final TextEditingController _confirmPasswordController =\n      TextEditingController();\n\n  // Стан видимості паролів\n  bool _obscurePassword = true;\n  // ... (пропуск неістотних рядків)\n  // Обробник натискання кнопки «Зареєструватися» (п. 7, 8, 13 ТЗ)\n  void _submitForm() {\n    // Перевірка валідації форми перед переходом (п. 13 ТЗ)\n    if (_formKey.currentState!.validate()) {\n      final String username = _usernameController.text.trim();\n\n      // Навігація на TaskManagerScreen із передачею імені користувача\n      Navigator.pushReplacement(\n        context,\n        MaterialPageRoute(\n          builder: (context) => TaskManagerScreen(username: username),\n        ),\n      );\n    } else {\n      // Якщо є помилки, інформуємо користувача через SnackBar\n      ScaffoldMessenger.of(context).showSnackBar(\n        SnackBar(\n          content: const Text(\n            'Будь ласка, виправте виділені помилки у формі!',\n            style: TextStyle(\n              color: Color(0xFF0D0F13),\n              fontWeight: FontWeight.bold,\n            ),\n          ),\n          backgroundColor: const Color(0xFFFF5252),\n          behavior: SnackBarBehavior.floating,\n          shape: RoundedRectangleBorder(\n            borderRadius: BorderRadius.circular(10),\n          ),\n          duration: const Duration(seconds: 2),\n        ),\n      );\n    }\n  }\n\n  // Допоміжна функція швидкого заповнення демо-даними\n  void _fillDemoData() {\n    setState(() {\n      _usernameController.text = 'Андрій Багрій-Белз';\n      _birthDateController.text = '2004-05-15';\n      _emailController.text = 'andrii.bagriy@nulp.ua';\n      _passwordController.text = 'flutter2026';\n      _confirmPasswordController.text = 'flutter2026';\n    });\n  }\n  // ... (пропуск неістотних рядків)\n                  ),\n                  validator: (value) {\n                    if (value == null || value.isEmpty) {\n                      return 'Введіть пароль';\n                    }\n                    if (value.length < 6) {\n                      return 'Пароль повинен містити не менше 6 символів';\n                    }\n                    return null;\n                  },\n  // ... (пропуск неістотних рядків)\n                      },\n                    ),\n                  ),\n                  validator: (value) {\n                    if (value == null || value.isEmpty) {\n                      return 'Підтвердіть пароль';\n                    }\n                    if (value != _passwordController.text) {\n                      return 'Поле підтвердження пароля повинно збігатися з паролем';\n                    }\n                    return null;\n                  },\n                ),\n\n// === lib/screens/login_screen.dart (фрагмент) ===\nimport 'package:flutter/material.dart';\n\nimport 'register_screen.dart';\nimport 'task_manager_screen.dart';\n\n/// Екран входу до системи (email + пароль з валідацією)\nclass LoginScreen extends StatefulWidget {\n  const LoginScreen({super.key});\n\n  @override\n  State<LoginScreen> createState() => _LoginScreenState();\n}\n\nclass _LoginScreenState extends State<LoginScreen> {\n  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();\n\n  final TextEditingController _emailController = TextEditingController();\n  final TextEditingController _passwordController = TextEditingController();\n\n  bool _obscurePassword = true;\n\n  @override\n  void dispose() {\n    _emailController.dispose();\n    _passwordController.dispose();\n    super.dispose();\n  }\n  // ... (пропуск неістотних рядків)\n  // Допоміжна функція швидкого заповнення демо-даними\n  void _fillDemoData() {\n    setState(() {\n      _emailController.text = 'andrii.bagriy@nulp.ua';\n      _passwordController.text = 'flutter2026';\n    });\n  }\n  // ... (пропуск неістотних рядків)\n                  fontSize: 22,\n                  fontWeight: FontWeight.bold,\n                ),\n              ),\n              const SizedBox(height: 6),\n              const Text(\n                'Введіть дані, щоб відкрити свої завдання',\n                textAlign: TextAlign.center,\n                style: TextStyle(color: Color(0xFF8B949E), fontSize: 14),\n              ),\n              const SizedBox(height: 28),\n              Form(\n                key: _formKey,\n                child: Column(\n                  children: [\n                    // Email\n                    TextFormField(\n                      controller: _emailController,\n                      keyboardType: TextInputType.emailAddress,\n                      validator: (value) {\n                        if (value == null || value.trim().isEmpty) {\n                          return 'Введіть адресу електронної пошти';\n                        }\n                        if (!value.contains('@')) {\n                          return 'Email повинен містити символ @';\n                        }\n                        return null;\n                      },\n                      decoration: InputDecoration(\n                        labelText: 'Електронна пошта (Email)',\n                        hintText: 'name@example.com',\n                        prefixIcon: const Icon(\n                          Icons.email,\n                          color: Color(0xFF8B949E),\n                        ),\n                        border: OutlineInputBorder(\n                          borderRadius: BorderRadius.circular(12),\n                        ),\n                      ),\n                    ),\n                    const SizedBox(height: 16),\n                    // Пароль\n                    TextFormField(\n                      controller: _passwordController,\n                      obscureText: _obscurePassword,\n                      validator: (value) {\n                        if (value == null || value.isEmpty) {\n                          return 'Введіть пароль';\n                        }\n                        if (value.length < 6) {\n                          return 'Пароль повинен містити щонайменше 6 символів';\n                        }\n                        return null;\n                      },\n                      decoration: InputDecoration(\n                        labelText: 'Пароль',\n                        hintText: '••••••••',\n                        prefixIcon: const Icon(\n                          Icons.lock,\n                          color: Color(0xFF8B949E),\n                        ),\n                        suffixIcon: IconButton(\n                          icon: Icon(\n                            _obscurePassword"
+    },
+    {
+      "type": "result",
+      "label": "2 Результат виконання коду:",
+      "numbered": false,
+      "images": [
+        "Lab_8/assets/welcome.png",
+        "Lab_8/assets/login_wand_filled.png",
+        "Lab_8/assets/register_filled.png",
+        "Lab_8/assets/manager.png",
+        "Lab_8/assets/register_manager.png",
+        "Lab_8/assets/logout.png"
+      ]
+    },
+    {
+      "type": "text",
+      "text": "1. Яке призначення віджета Form? Віджет Form групує поля введення (TextFormField) та забезпечує централізовану валідацію всіх полів через FormState.validate() за допомогою GlobalKey<FormState>."
+    },
+    {
+      "type": "text",
+      "text": "2. Чому використовують TextFormField замість TextField? TextFormField — це поле введення з вбудованою інтеграцією у Form: воно підтримує валідатор (validator), контролери та автозаповнення, тоді як TextField є базовим низькорівневим віджетом без такої інтеграції."
+    },
+    {
+      "type": "text",
+      "text": "3. Для чого потрібен TextEditingController? TextEditingController зберігає стан тексту поля, дозволяє програмно зчитувати та встановлювати значення (наприклад, автозаповнення демо-даними) і має бути звільнений викликом dispose()."
+    },
+    {
+      "type": "text",
+      "text": "4. Яка різниця між Navigator.push() і Navigator.pushReplacement()? Navigator.push() додає новий екран у стек маршрутів, а pushReplacement() замінює поточний екран новим — тому після входу чи реєстрації користувач не може випадково повернутися на форму натисканням «Назад»."
+    },
+    {
+      "type": "text",
+      "text": "5. Як передати дані з одного екрана на інший? Найпоширеніший спосіб — параметри конструктора цільового екрана: при створенні маршруту (MaterialPageRoute(builder: ...)) значення передаються у конструктор віджета, наприклад TaskManagerScreen(username: username)."
+    },
+    {
+      "type": "text",
+      "text": "6. Для чого використовують властивість obscureText? Властивість obscureText (тип bool) маскує введений текст символів — застосовується для полів пароля, щоб зберігати секретність даних."
+    }
+  ],
+  "conclusion": "На цій лабораторній роботі я сформував практичні навички роботи з формами введення даних у Flutter: створив екрани входу та реєстрації з повною валідацією полів (Form, TextFormField, TextEditingController, validator, obscureText), реалізував навігацію між екранами за допомогою Navigator.push() та Navigator.pushReplacement() з передачею імені користувача та привітанням на екрані TaskManagerScreen, інтегруючи його з лабораторної роботи №7. Працездатність перевірено 8 віджет-тестами та запуском на емуляторі Android."
+}
