@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+
+import 'task_manager_screen.dart';
 
 /// Екран реєстрації користувача RegisterScreen (п. 1 ТЗ)
 class RegisterScreen extends StatefulWidget {
@@ -60,7 +61,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               surface: Color(0xFF15181F),
               onSurface: Colors.white,
             ),
-            dialogTheme: const DialogThemeData(backgroundColor: Color(0xFF15181F)),
+            dialogTheme: const DialogThemeData(
+              backgroundColor: Color(0xFF15181F),
+            ),
           ),
           child: child!,
         );
@@ -81,18 +84,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     // Перевірка валідації форми перед переходом (п. 13 ТЗ)
     if (_formKey.currentState!.validate()) {
       final String username = _usernameController.text.trim();
-      final String email = _emailController.text.trim();
-      final String birthDate = _birthDateController.text.trim();
 
-      // Навігація на HomeScreen із передачею імені користувача (п. 8, 9, 11 ТЗ)
-      Navigator.push(
+      // Навігація на TaskManagerScreen із передачею імені користувача
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => HomeScreen(
-            username: username,
-            email: email,
-            birthDate: birthDate,
-          ),
+          builder: (context) => TaskManagerScreen(username: username),
         ),
       );
     } else {
@@ -269,7 +266,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (!trimmed.contains('@')) {
                       return 'Email повинен містити символ @';
                     }
-                    if (!trimmed.contains('.') || trimmed.indexOf('@') > trimmed.lastIndexOf('.')) {
+                    if (!trimmed.contains('.') ||
+                        trimmed.indexOf('@') > trimmed.lastIndexOf('.')) {
                       return 'Email повинен містити коректне доменне ім’я';
                     }
                     return null;
@@ -387,12 +385,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.info_outline, color: Color(0xFF4FC3F7), size: 18),
+                      Icon(
+                        Icons.info_outline,
+                        color: Color(0xFF4FC3F7),
+                        size: 18,
+                      ),
                       SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Усі поля перевіряються автоматично. Перехід на головний екран можливий лише за відсутності помилок.',
-                          style: TextStyle(fontSize: 11, color: Color(0xFF8B949E)),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Color(0xFF8B949E),
+                          ),
                         ),
                       ),
                     ],
