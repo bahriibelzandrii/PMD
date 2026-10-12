@@ -35,7 +35,10 @@ class TaskHeader extends StatelessWidget {
               if (isUrgent) ...[
                 const SizedBox(height: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFF6B6B).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(6),
@@ -73,7 +76,9 @@ class TaskHeader extends StatelessWidget {
           tooltip: isFavorite ? 'Видалити з обраного' : 'Додати в обране',
           icon: Icon(
             isFavorite ? Icons.favorite : Icons.favorite_border,
-            color: isFavorite ? const Color(0xFFFF4B6E) : const Color(0xFF8B949E),
+            color: isFavorite
+                ? const Color(0xFFFF4B6E)
+                : const Color(0xFF8B949E),
             size: 28,
           ),
           onPressed: onFavoriteToggle,

@@ -22,9 +22,7 @@ class TaskInfoCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isUrgent
-            ? const Color(0xFF26181E)
-            : backgroundColor,
+        color: isUrgent ? const Color(0xFF26181E) : backgroundColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isUrgent ? const Color(0xFFFF6B6B) : borderColor,

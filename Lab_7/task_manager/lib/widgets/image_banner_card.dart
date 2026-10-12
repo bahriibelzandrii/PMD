@@ -23,18 +23,9 @@ class ImageBannerCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: borderColor, width: 1),
       ),
-      child: Center(
-        child: Icon(
-          icon,
-          size: 72,
-          color: iconColor,
-        ),
-      ),
+      child: Center(child: Icon(icon, size: 72, color: iconColor)),
     );
   }
 }

@@ -21,10 +21,7 @@ class NoteInputCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF15181F),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFF2A3142),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFF2A3142), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,11 +34,11 @@ class NoteInputCard extends StatelessWidget {
               labelText: 'Коментар або нотатка',
               labelStyle: const TextStyle(color: Color(0xFF8B949E)),
               hintText: 'Введіть деталі або оновлення...',
-              hintStyle: const TextStyle(color: Color(0xFF555F70), fontSize: 13),
-              prefixIcon: const Icon(
-                Icons.edit_note,
-                color: Color(0xFFD4FF00),
+              hintStyle: const TextStyle(
+                color: Color(0xFF555F70),
+                fontSize: 13,
               ),
+              prefixIcon: const Icon(Icons.edit_note, color: Color(0xFFD4FF00)),
               suffixIcon: noteText.isNotEmpty
                   ? IconButton(
                       icon: const Icon(Icons.clear, color: Color(0xFF8B949E)),
@@ -84,11 +81,15 @@ class NoteInputCard extends StatelessWidget {
                   noteText.isEmpty ? '— (поле порожнє)' : noteText,
                   style: TextStyle(
                     fontSize: 13,
-                    fontStyle: noteText.isEmpty ? FontStyle.italic : FontStyle.normal,
+                    fontStyle: noteText.isEmpty
+                        ? FontStyle.italic
+                        : FontStyle.normal,
                     color: noteText.isEmpty
                         ? const Color(0xFF555F70)
                         : const Color(0xFFD4FF00),
-                    fontWeight: noteText.isEmpty ? FontWeight.normal : FontWeight.w600,
+                    fontWeight: noteText.isEmpty
+                        ? FontWeight.normal
+                        : FontWeight.w600,
                   ),
                 ),
               ),

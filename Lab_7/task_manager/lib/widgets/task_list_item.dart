@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/task_model.dart';
 
 /// Віджет для відображення одного рядка завдання за допомогою ListTile
@@ -32,20 +33,27 @@ class TaskListItem extends StatelessWidget {
             color: isDone
                 ? const Color(0xFF1F2430)
                 : (task.isFavorite
-                    ? const Color(0xFFFF4B6E).withValues(alpha: 0.3)
-                    : const Color(0xFF2A3142)),
+                      ? const Color(0xFFFF4B6E).withValues(alpha: 0.3)
+                      : const Color(0xFF2A3142)),
             width: 1,
           ),
         ),
         clipBehavior: Clip.antiAlias,
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 2,
+          ),
           // 1. leading: іконка "обране"
           leading: IconButton(
-            tooltip: task.isFavorite ? 'Видалити з обраного' : 'Додати в обране',
+            tooltip: task.isFavorite
+                ? 'Видалити з обраного'
+                : 'Додати в обране',
             icon: Icon(
               task.isFavorite ? Icons.favorite : Icons.favorite_border,
-              color: task.isFavorite ? const Color(0xFFFF4B6E) : const Color(0xFF8B949E),
+              color: task.isFavorite
+                  ? const Color(0xFFFF4B6E)
+                  : const Color(0xFF8B949E),
               size: 24,
             ),
             onPressed: onToggleFavorite,
@@ -71,69 +79,72 @@ class TaskListItem extends StatelessWidget {
                   color: isDone
                       ? const Color(0xFFD4FF00).withValues(alpha: 0.15)
                       : const Color(0xFF4FC3F7).withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                isDone ? 'Виконано' : 'Активне',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: isDone ? const Color(0xFFD4FF00) : const Color(0xFF4FC3F7),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  isDone ? 'Виконано' : 'Активне',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: isDone
+                        ? const Color(0xFFD4FF00)
+                        : const Color(0xFF4FC3F7),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              'ID: #${task.id}',
-              style: const TextStyle(
-                fontSize: 11,
-                color: Color(0xFF555F70),
+              const SizedBox(width: 8),
+              Text(
+                'ID: #${task.id}',
+                style: const TextStyle(fontSize: 11, color: Color(0xFF555F70)),
               ),
-            ),
-          ],
+            ],
+          ),
+          // 4. trailing: перемикач статусу, редагування та видалення
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Кнопка перемикання статусу
+              IconButton(
+                tooltip: isDone
+                    ? 'Позначити як активне'
+                    : 'Позначити як виконане',
+                icon: Icon(
+                  isDone ? Icons.check_circle : Icons.radio_button_unchecked,
+                  color: isDone
+                      ? const Color(0xFFD4FF00)
+                      : const Color(0xFF8B949E),
+                  size: 20,
+                ),
+                onPressed: onToggleStatus,
+              ),
+              // Кнопка редагування (п. 10 ТЗ)
+              IconButton(
+                tooltip: 'Редагувати завдання',
+                icon: const Icon(
+                  Icons.edit_outlined,
+                  color: Color(0xFF4FC3F7),
+                  size: 20,
+                ),
+                onPressed: onEdit,
+              ),
+              // Кнопка видалення
+              IconButton(
+                tooltip: 'Видалити завдання',
+                icon: const Icon(
+                  Icons.delete_outline,
+                  color: Color(0xFFEF5350),
+                  size: 20,
+                ),
+                onPressed: onDelete,
+              ),
+            ],
+          ),
+          // Зміна статусу при довгому натисканні згідно з п. 7 ТЗ
+          onLongPress: onToggleStatus,
+          // Перемикання статусу при кліку на картку
+          onTap: onToggleStatus,
         ),
-        // 4. trailing: перемикач статусу, редагування та видалення
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Кнопка перемикання статусу
-            IconButton(
-              tooltip: isDone ? 'Позначити як активне' : 'Позначити як виконане',
-              icon: Icon(
-                isDone ? Icons.check_circle : Icons.radio_button_unchecked,
-                color: isDone ? const Color(0xFFD4FF00) : const Color(0xFF8B949E),
-                size: 20,
-              ),
-              onPressed: onToggleStatus,
-            ),
-            // Кнопка редагування (п. 10 ТЗ)
-            IconButton(
-              tooltip: 'Редагувати завдання',
-              icon: const Icon(
-                Icons.edit_outlined,
-                color: Color(0xFF4FC3F7),
-                size: 20,
-              ),
-              onPressed: onEdit,
-            ),
-            // Кнопка видалення
-            IconButton(
-              tooltip: 'Видалити завдання',
-              icon: const Icon(
-                Icons.delete_outline,
-                color: Color(0xFFEF5350),
-                size: 20,
-              ),
-              onPressed: onDelete,
-            ),
-          ],
-        ),
-        // Зміна статусу при довгому натисканні згідно з п. 7 ТЗ
-        onLongPress: onToggleStatus,
-        // Перемикання статусу при кліку на картку
-        onTap: onToggleStatus,
       ),
-    ),
-  );
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:task_manager/main.dart';
@@ -9,12 +10,42 @@ import 'package:task_manager/widgets/task_list_item.dart';
 
 List<TaskModel> getTestInitialTasks() {
   return [
-    TaskModel(id: 1, title: 'Оптимізація запитів до бази даних', isFavorite: true, status: TaskStatus.active),
-    TaskModel(id: 2, title: 'Рефакторинг архітектури Flutter-екранів', isFavorite: false, status: TaskStatus.done),
-    TaskModel(id: 3, title: 'Інтеграція REST API та обробка помилок', isFavorite: false, status: TaskStatus.active),
-    TaskModel(id: 4, title: 'Написання віджет-тестів та перевірка стану', isFavorite: true, status: TaskStatus.done),
-    TaskModel(id: 5, title: 'Оновлення темної палітри кольорів Material 3', isFavorite: false, status: TaskStatus.active),
-    TaskModel(id: 6, title: 'Підготовка збірки та публікація в Play Store', isFavorite: false, status: TaskStatus.active),
+    TaskModel(
+      id: 1,
+      title: 'Оптимізація запитів до бази даних',
+      isFavorite: true,
+      status: TaskStatus.active,
+    ),
+    TaskModel(
+      id: 2,
+      title: 'Рефакторинг архітектури Flutter-екранів',
+      isFavorite: false,
+      status: TaskStatus.done,
+    ),
+    TaskModel(
+      id: 3,
+      title: 'Інтеграція REST API та обробка помилок',
+      isFavorite: false,
+      status: TaskStatus.active,
+    ),
+    TaskModel(
+      id: 4,
+      title: 'Написання віджет-тестів та перевірка стану',
+      isFavorite: true,
+      status: TaskStatus.done,
+    ),
+    TaskModel(
+      id: 5,
+      title: 'Оновлення темної палітри кольорів Material 3',
+      isFavorite: false,
+      status: TaskStatus.active,
+    ),
+    TaskModel(
+      id: 6,
+      title: 'Підготовка збірки та публікація в Play Store',
+      isFavorite: false,
+      status: TaskStatus.active,
+    ),
   ];
 }
 
@@ -41,7 +72,9 @@ void main() {
   });
 
   group('Lab 7 Unit Tests: JSON & Model Serialization', () {
-    testWidgets('TaskModel fromJson та toJson працюють коректно', (tester) async {
+    testWidgets('TaskModel fromJson та toJson працюють коректно', (
+      tester,
+    ) async {
       final jsonMap = {
         'id': 42,
         'title': 'Тестове завдання JSON',
@@ -63,7 +96,9 @@ void main() {
       expect(serialized['status'], 'done');
     });
 
-    testWidgets('tasksFromJson та tasksToJson коректно обробляють масиви', (tester) async {
+    testWidgets('tasksFromJson та tasksToJson коректно обробляють масиви', (
+      tester,
+    ) async {
       const jsonString = '''
       [
         {"id": 1, "title": "Task 1", "isFavorite": false, "status": "active"},
@@ -81,7 +116,9 @@ void main() {
       expect(encoded, contains('"status": "done"'));
     });
 
-    testWidgets('TaskStorageService зберігає та читає JSON локально', (tester) async {
+    testWidgets('TaskStorageService зберігає та читає JSON локально', (
+      tester,
+    ) async {
       final tasks = await storageService.loadTasks();
       expect(tasks.length, 6);
       expect(tasks.first.title, 'Оптимізація запитів до бази даних');
@@ -95,18 +132,19 @@ void main() {
       await tester.pumpAndSettle();
     }
 
-    testWidgets('Відображення списку завдань та статистики після завантаження',
-        (WidgetTester tester) async {
-      await loadApp(tester);
+    testWidgets(
+      'Відображення списку завдань та статистики після завантаження',
+      (WidgetTester tester) async {
+        await loadApp(tester);
 
-      expect(find.text('Лабораторна робота №7'), findsOneWidget);
-      expect(find.byType(StatsSummaryCard), findsOneWidget);
-      expect(find.byType(TaskListItem), findsWidgets);
-      expect(find.text('Оптимізація запитів до бази даних'), findsOneWidget);
-    });
+        expect(find.text('Лабораторна робота №7'), findsOneWidget);
+        expect(find.byType(StatsSummaryCard), findsOneWidget);
+        expect(find.byType(TaskListItem), findsWidgets);
+        expect(find.text('Оптимізація запитів до бази даних'), findsOneWidget);
+      },
+    );
 
-    testWidgets('Перемикання обраного та статусу',
-        (WidgetTester tester) async {
+    testWidgets('Перемикання обраного та статусу', (WidgetTester tester) async {
       await loadApp(tester);
 
       // Знаходимо іконку обраного в першому елементі
@@ -134,8 +172,9 @@ void main() {
       expect(find.textContaining('Завдання виконано!'), findsOneWidget);
     });
 
-    testWidgets('Додавання нового елемента через діалог',
-        (WidgetTester tester) async {
+    testWidgets('Додавання нового елемента через діалог', (
+      WidgetTester tester,
+    ) async {
       await loadApp(tester);
 
       // Натискаємо FAB
@@ -162,7 +201,10 @@ void main() {
       await tester.tap(addButton);
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('Завдання додано та збережено в JSON'), findsOneWidget);
+      expect(
+        find.textContaining('Завдання додано та збережено в JSON'),
+        findsOneWidget,
+      );
 
       // Прокручуємо до нового елемента
       final scrollable = find.byType(Scrollable).last;
@@ -174,8 +216,9 @@ void main() {
       expect(find.text('Автоматизоване тестування JSON'), findsOneWidget);
     });
 
-    testWidgets('Редагування існуючого елемента через діалог',
-        (WidgetTester tester) async {
+    testWidgets('Редагування існуючого елемента через діалог', (
+      WidgetTester tester,
+    ) async {
       await loadApp(tester);
 
       // Знаходимо кнопку редагування в першому елементі
@@ -208,12 +251,14 @@ void main() {
       await tester.tap(saveButton);
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('Зміни збережено в JSON-файл'), findsOneWidget);
+      expect(
+        find.textContaining('Зміни збережено в JSON-файл'),
+        findsOneWidget,
+      );
       expect(find.text('Оптимізація бази даних (Оновлено)'), findsOneWidget);
     });
 
-    testWidgets('Видалення завдання зі списку',
-        (WidgetTester tester) async {
+    testWidgets('Видалення завдання зі списку', (WidgetTester tester) async {
       await loadApp(tester);
 
       // Знаходимо кнопку видалення в першому елементі
@@ -229,16 +274,10 @@ void main() {
       expect(find.textContaining('видалено з JSON'), findsOneWidget);
     });
 
-    testWidgets('Фільтрація завдань за чіпами',
-        (WidgetTester tester) async {
+    testWidgets('Фільтрація завдань за чіпами', (WidgetTester tester) async {
       await loadApp(tester);
 
-      final favoritesChip = find.byWidgetPredicate(
-        (w) =>
-            w is ChoiceChip &&
-            w.label is Text &&
-            ((w.label as Text).data?.contains('Обрані') ?? false),
-      );
+      final favoritesChip = find.textContaining('Обрані (');
       expect(favoritesChip, findsOneWidget);
 
       await tester.tap(favoritesChip);

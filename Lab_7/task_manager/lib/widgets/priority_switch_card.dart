@@ -16,10 +16,7 @@ class PrioritySwitchCard extends StatelessWidget {
       color: const Color(0xFF15181F),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(
-          color: Color(0xFF2A3142),
-          width: 1,
-        ),
+        side: const BorderSide(color: Color(0xFF2A3142), width: 1),
       ),
       child: SwitchListTile(
         title: const Text(

@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 /// Перелік можливих статусів завдання (enum)
-enum TaskStatus {
-  active,
-  done,
-}
+enum TaskStatus { active, done }
 
 /// Модель завдання (Model class) із 4 обов'язковими типами полів:
 /// - int (ідентифікатор)
@@ -66,7 +63,9 @@ class TaskModel {
 /// Перетворення JSON-рядка у список моделей (п. 7 ТЗ)
 List<TaskModel> tasksFromJson(String jsonString) {
   final List<dynamic> data = jsonDecode(jsonString) as List<dynamic>;
-  return data.map((e) => TaskModel.fromJson(e as Map<String, dynamic>)).toList();
+  return data
+      .map((e) => TaskModel.fromJson(e as Map<String, dynamic>))
+      .toList();
 }
 
 /// Серіалізація списку моделей у відформатований JSON-рядок
