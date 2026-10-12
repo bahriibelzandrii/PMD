@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 class StatsSummaryCard extends StatelessWidget {
   final Map<String, int> stats;
 
-  const StatsSummaryCard({
-    super.key,
-    required this.stats,
-  });
+  const StatsSummaryCard({super.key, required this.stats});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +18,7 @@ class StatsSummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF15181F),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: const Color(0xFF2A3142),
-          width: 1,
-        ),
+        border: Border.all(color: const Color(0xFF2A3142), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +32,7 @@ class StatsSummaryCard extends StatelessWidget {
               ),
               SizedBox(width: 8),
               Text(
-                'Статистика завдань (Map<String, int>)',
+                'Статистика завдань',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -97,10 +91,7 @@ class StatsSummaryCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFF1F2430),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: color.withValues(alpha: 0.25),
-            width: 1,
-          ),
+          border: Border.all(color: color.withValues(alpha: 0.25), width: 1),
         ),
         child: Column(
           children: [

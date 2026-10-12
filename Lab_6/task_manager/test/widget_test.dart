@@ -6,8 +6,9 @@ import 'package:task_manager/widgets/stats_summary_card.dart';
 import 'package:task_manager/widgets/task_list_item.dart';
 
 void main() {
-  testWidgets('Lab6: Перевірка ініціалізації моделі та початкового списку',
-      (WidgetTester tester) async {
+  testWidgets('Lab6: Перевірка ініціалізації моделі та початкового списку', (
+    WidgetTester tester,
+  ) async {
     final tasks = getInitialTasks();
     expect(tasks.length, greaterThanOrEqualTo(5));
     expect(tasks.first.id, 1);
@@ -16,8 +17,9 @@ void main() {
     expect(tasks.first.isFavorite, isA<bool>());
   });
 
-  testWidgets('Lab6: Відображення початкового списку та статистики на екрані',
-      (WidgetTester tester) async {
+  testWidgets('Lab6: Відображення початкового списку та статистики на екрані', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
@@ -26,18 +28,22 @@ void main() {
 
     // Перевірка віджета статистики
     expect(find.byType(StatsSummaryCard), findsOneWidget);
-    expect(find.text('Статистика завдань (Map<String, int>)'), findsOneWidget);
+    expect(find.text('Статистика завдань'), findsOneWidget);
     expect(find.text('Всього'), findsOneWidget);
     expect(find.text('Активні'), findsOneWidget);
 
     // Перевірка початкових завдань у ListView
     expect(find.byType(TaskListItem), findsWidgets);
     expect(find.text('Оптимізація запитів до бази даних'), findsOneWidget);
-    expect(find.text('Рефакторинг архітектури Flutter-екранів'), findsOneWidget);
+    expect(
+      find.text('Рефакторинг архітектури Flutter-екранів'),
+      findsOneWidget,
+    );
   });
 
-  testWidgets('Lab6: Перемикання "обране" (isFavorite) та зміна статистики',
-      (WidgetTester tester) async {
+  testWidgets('Lab6: Перемикання "обране" (isFavorite) та зміна статистики', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
@@ -55,23 +61,26 @@ void main() {
     expect(find.text('Видалено з обраного 🤍'), findsOneWidget);
   });
 
-  testWidgets('Lab6: Перемикання статусу (TaskStatus enum) через кнопку або клік',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Lab6: Перемикання статусу (TaskStatus enum) через кнопку або клік',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+      await tester.pumpAndSettle();
 
-    // Перше завдання активне - знаходимо unchecked іконку
-    final uncheckIcons = find.byIcon(Icons.radio_button_unchecked);
-    expect(uncheckIcons, findsWidgets);
+      // Перше завдання активне - знаходимо unchecked іконку
+      final uncheckIcons = find.byIcon(Icons.radio_button_unchecked);
+      expect(uncheckIcons, findsWidgets);
 
-    await tester.tap(uncheckIcons.first);
-    await tester.pumpAndSettle();
+      await tester.tap(uncheckIcons.first);
+      await tester.pumpAndSettle();
 
-    expect(find.text('Завдання виконано! 🎉'), findsOneWidget);
-  });
+      expect(find.text('Завдання виконано! 🎉'), findsOneWidget);
+    },
+  );
 
-  testWidgets('Lab6: Додавання нового елемента через діалог',
-      (WidgetTester tester) async {
+  testWidgets('Lab6: Додавання нового елемента через діалог', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
@@ -114,8 +123,9 @@ void main() {
     expect(find.text('Тестове нове завдання'), findsOneWidget);
   });
 
-  testWidgets('Lab6: Видалення елемента зі списку',
-      (WidgetTester tester) async {
+  testWidgets('Lab6: Видалення елемента зі списку', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
@@ -133,20 +143,24 @@ void main() {
     expect(find.text('Оптимізація запитів до бази даних'), findsNothing);
   });
 
-  testWidgets('Lab6: Фільтрація списку за категоріями',
-      (WidgetTester tester) async {
+  testWidgets('Lab6: Фільтрація списку за категоріями', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(const MyApp());
     await tester.pumpAndSettle();
 
-    // Натискаємо на ChoiceChip "Обрані (2)"
-    final favoritesChip = find.widgetWithText(ChoiceChip, 'Обрані (2)');
-    expect(favoritesChip, findsOneWidget);
-    await tester.tap(favoritesChip);
+    // Натискаємо фільтр "Обрані (2)"
+    final favoritesFilter = find.text('Обрані (2)');
+    expect(favoritesFilter, findsOneWidget);
+    await tester.tap(favoritesFilter);
     await tester.pumpAndSettle();
 
     // Тільки обрані повинні показуватися (завдання 1 і 4)
     expect(find.text('Оптимізація запитів до бази даних'), findsOneWidget);
-    expect(find.text('Написання віджет-тестів та перевірка стану'), findsOneWidget);
+    expect(
+      find.text('Написання віджет-тестів та перевірка стану'),
+      findsOneWidget,
+    );
     // Необрані завдання повинні бути відфільтровані
     expect(find.text('Рефакторинг архітектури Flutter-екранів'), findsNothing);
   });

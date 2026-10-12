@@ -1,15 +1,12 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+
 import '../models/task_model.dart';
 import '../widgets/stats_summary_card.dart';
 import '../widgets/task_list_item.dart';
 
-enum TaskFilter {
-  all,
-  active,
-  done,
-  favorites,
-}
+enum TaskFilter { all, active, done, favorites }
 
 class Lab6Screen extends StatefulWidget {
   const Lab6Screen({super.key});
@@ -34,11 +31,11 @@ class _Lab6ScreenState extends State<Lab6Screen> {
 
   // Обчислення статистики у вигляді Map<String, int> (п. 8 ТЗ)
   Map<String, int> get _statistics => {
-        'total': _tasks.length,
-        'favorites': _tasks.where((t) => t.isFavorite).length,
-        'done': _tasks.where((t) => t.status == TaskStatus.done).length,
-        'active': _tasks.where((t) => t.status == TaskStatus.active).length,
-      };
+    'total': _tasks.length,
+    'favorites': _tasks.where((t) => t.isFavorite).length,
+    'done': _tasks.where((t) => t.status == TaskStatus.done).length,
+    'active': _tasks.where((t) => t.status == TaskStatus.active).length,
+  };
 
   // Фільтрований список завдань
   List<TaskModel> get _filteredTasks {
@@ -67,8 +64,9 @@ class _Lab6ScreenState extends State<Lab6Screen> {
   // Зміна статусу enum (п. 7 ТЗ)
   void _toggleStatus(TaskModel task) {
     setState(() {
-      task.status =
-          task.status == TaskStatus.done ? TaskStatus.active : TaskStatus.done;
+      task.status = task.status == TaskStatus.done
+          ? TaskStatus.active
+          : TaskStatus.done;
     });
     _showSnackBar(
       task.status == TaskStatus.done
@@ -267,10 +265,16 @@ class _Lab6ScreenState extends State<Lab6Screen> {
         title: const Text('Лабораторна робота №6'),
         centerTitle: true,
         backgroundColor: const Color(0xFF15181F),
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         actions: [
           IconButton(
             tooltip: 'Додати завдання',
-            icon: const Icon(Icons.add_circle_outline, color: Color(0xFFD4FF00)),
+            icon: const Icon(
+              Icons.add_circle_outline,
+              color: Color(0xFFD4FF00),
+            ),
             onPressed: _showAddTaskDialog,
           ),
         ],
@@ -286,29 +290,26 @@ class _Lab6ScreenState extends State<Lab6Screen> {
               StatsSummaryCard(stats: _statistics),
               const SizedBox(height: 14),
 
-              // 2. Фільтри завдань
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildFilterChip('Всі (${_tasks.length})', TaskFilter.all),
-                    const SizedBox(width: 8),
-                    _buildFilterChip(
-                      'Активні (${_statistics['active']})',
-                      TaskFilter.active,
-                    ),
-                    const SizedBox(width: 8),
-                    _buildFilterChip(
-                      'Виконані (${_statistics['done']})',
-                      TaskFilter.done,
-                    ),
-                    const SizedBox(width: 8),
-                    _buildFilterChip(
-                      'Обрані (${_statistics['favorites']})',
-                      TaskFilter.favorites,
-                    ),
-                  ],
-                ),
+              // 2. Фільтри завдань (всі 4 види на одному рядку, без обрізання)
+              Row(
+                children: [
+                  _buildFilterChip('Всі (${_tasks.length})', TaskFilter.all),
+                  const SizedBox(width: 6),
+                  _buildFilterChip(
+                    'Активні (${_statistics['active']})',
+                    TaskFilter.active,
+                  ),
+                  const SizedBox(width: 6),
+                  _buildFilterChip(
+                    'Виконані (${_statistics['done']})',
+                    TaskFilter.done,
+                  ),
+                  const SizedBox(width: 6),
+                  _buildFilterChip(
+                    'Обрані (${_statistics['favorites']})',
+                    TaskFilter.favorites,
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
 
@@ -371,27 +372,44 @@ class _Lab6ScreenState extends State<Lab6Screen> {
 
   Widget _buildFilterChip(String label, TaskFilter filter) {
     final isSelected = _currentFilter == filter;
-    return ChoiceChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (selected) {
-        if (selected) {
-          setState(() {
-            _currentFilter = filter;
-          });
-        }
-      },
-      selectedColor: const Color(0xFFD4FF00),
-      backgroundColor: const Color(0xFF15181F),
-      labelStyle: TextStyle(
-        color: isSelected ? const Color(0xFF0D0F13) : const Color(0xFF8B949E),
-        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-        fontSize: 12,
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          if (_currentFilter != filter) {
+            setState(() {
+              _currentFilter = filter;
+            });
+          }
+        },
+        child: Container(
+          height: 38,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: isSelected
+                ? const Color(0xFFD4FF00)
+                : const Color(0xFF15181F),
+            borderRadius: BorderRadius.circular(19),
+            border: Border.all(
+              color: isSelected
+                  ? const Color(0xFFD4FF00)
+                  : const Color(0xFF2A3142),
+              width: 1.5,
+            ),
+          ),
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: isSelected
+                  ? const Color(0xFF0D0F13)
+                  : const Color(0xFF8B949E),
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              fontSize: 12,
+            ),
+          ),
+        ),
       ),
-      side: BorderSide(
-        color: isSelected ? const Color(0xFFD4FF00) : const Color(0xFF2A3142),
-      ),
-      showCheckmark: false,
     );
   }
 }
