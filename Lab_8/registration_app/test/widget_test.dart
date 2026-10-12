@@ -247,4 +247,28 @@ void main() {
     expect(find.text('Вітаємо, ivan! 👋'), findsOneWidget);
     expect(find.byType(TaskListItem), findsNWidgets(6));
   });
+
+  testWidgets(
+    '8. Вхід: чарівна кнопка автозаповнює форму та веде до менеджера',
+    (WidgetTester tester) async {
+      setPhoneSize(tester);
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await loadWelcome(tester);
+      await openLogin(tester);
+
+      // Чарівна кнопка у AppBar заповнює обидва поля
+      await tester.tap(find.byTooltip('Заповнити тестовими даними'));
+      await tester.pumpAndSettle();
+      expect(find.text('andrii.bagriy@nulp.ua'), findsOneWidget);
+
+      // Вхід з заповненою формою
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Увійти'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TaskManagerScreen), findsOneWidget);
+      expect(find.text('Вітаємо, andrii.bagriy! 👋'), findsOneWidget);
+      expect(find.byType(TaskListItem), findsNWidgets(6));
+    },
+  );
 }

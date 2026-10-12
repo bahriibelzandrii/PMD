@@ -60,6 +60,14 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  // Допоміжна функція швидкого заповнення демо-даними
+  void _fillDemoData() {
+    setState(() {
+      _emailController.text = 'andrii.bagriy@nulp.ua';
+      _passwordController.text = 'flutter2026';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,6 +81,13 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: const Color(0xFF15181F),
         surfaceTintColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          IconButton(
+            tooltip: 'Заповнити тестовими даними',
+            icon: const Icon(Icons.auto_fix_high, color: Color(0xFFD4FF00)),
+            onPressed: _fillDemoData,
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
