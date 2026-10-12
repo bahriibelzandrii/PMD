@@ -27,12 +27,9 @@
       "label": "2 Результат виконання коду:",
       "numbered": false,
       "images": [
-        "Lab_8/assets/welcome.png",
-        "Lab_8/assets/login_wand_filled.png",
-        "Lab_8/assets/register_filled.png",
-        "Lab_8/assets/manager.png",
-        "Lab_8/assets/register_manager.png",
-        "Lab_8/assets/logout.png"
+        "Lab_8/assets/duo_1_welcome_login.png",
+        "Lab_8/assets/duo_2_register_manager.png",
+        "Lab_8/assets/duo_3_greeting_logout.png"
       ]
     },
     {
