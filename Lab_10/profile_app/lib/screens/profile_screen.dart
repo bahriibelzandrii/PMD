@@ -4,6 +4,7 @@ import '../models/user_data.dart';
 import '../services/user_storage_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_styles.dart';
+import 'settings_pages.dart';
 import 'welcome_screen.dart';
 
 /// Екран профілю користувача ProfileScreen (п. 6 ТЗ)
@@ -86,13 +87,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         centerTitle: true,
         backgroundColor: AppColors.card(isDark),
         elevation: 0,
-        actions: [
-          IconButton(
-            tooltip: 'Вийти з облікового запису',
-            icon: Icon(Icons.logout, size: 20, color: AppColors.error),
-            onPressed: () => _confirmLogout(context, isDark),
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -125,20 +119,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               const SizedBox(height: 20),
 
-              // 5. Кнопка редагування профілю
+              // 5. Кнопка редагування профілю (чорний текст на акценті)
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.onPrimary,
+                  backgroundColor: AppColors.accent(isDark),
+                  foregroundColor: AppColors.onAccent(isDark),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 icon: const Icon(Icons.edit_outlined, size: 20),
-                label: const Text(
+                label: Text(
                   'Редагувати профіль',
-                  style: AppStyles.button,
+                  style: AppStyles.button.copyWith(
+                    color: AppColors.onAccent(isDark),
+                  ),
                 ),
                 onPressed: () {
                   _showSnackBar(
@@ -187,10 +183,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           height: 84,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [AppColors.primary, AppColors.secondary],
+              colors: [AppColors.accent(isDark), AppColors.secondary],
             ),
           ),
           child: Center(
@@ -422,9 +418,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.school_outlined,
-                color: AppColors.primary,
+                color: AppColors.accent(isDark),
                 size: 18,
               ),
               const SizedBox(width: 8),
@@ -451,9 +447,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(width: 8),
               _buildStatItem(
                 'Лабораторна',
-                '№9',
+                '№10',
                 isDark,
-                color: AppColors.primary,
+                color: AppColors.accent(isDark),
               ),
               const SizedBox(width: 8),
               _buildStatItem(
@@ -523,8 +519,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         secondary: Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: (isDark ? AppColors.secondary : AppColors.primary)
-                .withValues(alpha: 0.15),
+            color: AppColors.accent(isDark).withValues(alpha: 0.15),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -625,13 +620,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: isDark ? AppColors.textSecondaryDark : AppColors.grey,
               size: 20,
             ),
-            onTap: () {
-              _showSnackBar(context, 'Обрано: ${opt['title']}');
-            },
+            onTap: () => _openOptionPage(context, index),
           );
         },
       ),
     );
+  }
+
+  // Перехід на реальні сторінки налаштувань (ЛР 10: навігація між екранами)
+  void _openOptionPage(BuildContext context, int index) {
+    final Widget page;
+    switch (index) {
+      case 0:
+        page = PersonalDataPage(name: _displayName, email: _displayEmail);
+      case 1:
+        page = const SecurityPage();
+      case 2:
+        page = const NotificationsPage();
+      default:
+        page = const AppSettingsPage();
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (_) => page));
   }
 
   void _showSnackBar(BuildContext context, String message) {

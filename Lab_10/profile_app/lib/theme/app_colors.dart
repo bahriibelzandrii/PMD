@@ -10,8 +10,14 @@ class AppColors {
   AppColors._();
 
   // ─── Основні брендові кольори ───────────────────────────────────────────
-  static const Color primary = Color(0xFFD4FF00); // Неоновий лайм (акцент)
+  static const Color primary = Color(0xFFD4FF00); // Неоновий лайм (акцент, темна тема)
+  /// Читабельна зелень для світлої теми (лайм «зникає» на світлому фоні)
+  static const Color primaryLight = Color(0xFF4C7C00);
   static const Color onPrimary = Color(0xFF0D0F13); // Текст на neon-фоні
+  /// Акцентний колір активної теми (єдине джерело акценту)
+  static Color accent(bool isDark) => isDark ? primary : primaryLight;
+  /// Читаний колір тексту/іконок на акцентному фоні
+  static Color onAccent(bool isDark) => isDark ? onPrimary : Colors.white;
   static const Color secondary = Color(
     0xFF4FC3F7,
   ); // Небесний (активні статуси)

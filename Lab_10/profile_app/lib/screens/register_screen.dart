@@ -162,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         actions: [
           IconButton(
             tooltip: 'Заповнити тестовими даними',
-            icon: const Icon(Icons.auto_fix_high, color: AppColors.primary),
+            icon: Icon(Icons.auto_fix_high, color: AppColors.accent(isDark)),
             onPressed: _fillDemoData,
           ),
         ],
@@ -180,15 +180,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
+                      color: AppColors.accent(isDark).withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppColors.primary.withValues(alpha: 0.4),
+                        color: AppColors.accent(isDark).withValues(alpha: 0.4),
                       ),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.person_add_alt_1_rounded,
-                      color: AppColors.primary,
+                      color: AppColors.accent(isDark),
                       size: 38,
                     ),
                   ),
@@ -203,8 +203,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Text(
                   'Заповніть усі обов’язкові поля для входу в систему',
                   textAlign: TextAlign.center,
-                  style:
-                      AppStyles.subtitle(isDark: isDark).copyWith(fontSize: 13),
+                  style: AppStyles.subtitle(isDark: isDark)
+                      .copyWith(fontSize: 13),
                 ),
                 const SizedBox(height: 24),
 
@@ -243,9 +243,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'РРРР-ММ-ДД або ДД.ММ.РРРР',
                     prefixIcon: Icons.cake_outlined,
                     suffixIcon: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.calendar_month_outlined,
-                        color: AppColors.primary,
+                        color: AppColors.accent(isDark),
                       ),
                       tooltip: 'Обрати дату з календаря',
                       onPressed: () => _selectBirthDate(context),
@@ -371,8 +371,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 // 6. Кнопка «Зареєструватися» (п. 7 ТЗ)
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.onPrimary,
+                    backgroundColor: AppColors.accent(isDark),
+                    foregroundColor: AppColors.onAccent(isDark),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -467,7 +467,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+        borderSide: BorderSide(color: AppColors.accent(isDark), width: 1.5),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

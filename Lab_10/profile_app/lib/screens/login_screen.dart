@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           IconButton(
             tooltip: 'Заповнити тестовими даними',
-            icon: const Icon(Icons.auto_fix_high, color: AppColors.primary),
+            icon: Icon(Icons.auto_fix_high, color: AppColors.accent(isDark)),
             onPressed: _fillDemoData,
           ),
         ],
@@ -144,11 +144,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: BoxDecoration(
                   color: AppColors.card(isDark),
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.primary),
+                  border: Border.all(color: AppColors.accent(isDark)),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.person,
-                  color: AppColors.primary,
+                  color: AppColors.accent(isDark),
                   size: 36,
                 ),
               ),
@@ -239,8 +239,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          foregroundColor: AppColors.onPrimary,
+                          backgroundColor: AppColors.accent(isDark),
+                          foregroundColor: AppColors.onAccent(isDark),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -286,7 +286,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Зареєструватися',
                             style: AppStyles.subtitle(
                               isDark: isDark,
-                              color: AppColors.primary,
+                              color: AppColors.accent(isDark),
                             ).copyWith(fontWeight: FontWeight.bold),
                           ),
                         ),

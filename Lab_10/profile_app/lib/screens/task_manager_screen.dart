@@ -96,19 +96,21 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
   // 3. Синхронізація favorites ids у SharedPreferences (п. 6, 7 ТЗ ЛР 10)
   //    — зберігається лише список ідентифікаторів обраних елементів
   Future<void> _persistFavoriteIds() async {
-    final ids =
-        _tasks.where((t) => t.isFavorite).map((t) => t.id.toString()).toList();
+    final ids = _tasks
+        .where((t) => t.isFavorite)
+        .map((t) => t.id.toString())
+        .toList();
     _favoriteIds = ids;
     await _userStorage.saveFavoriteIds(ids);
   }
 
   // Обчислення статистики у вигляді Map<String, int>
   Map<String, int> get _statistics => {
-        'total': _tasks.length,
-        'favorites': _tasks.where((t) => t.isFavorite).length,
-        'done': _tasks.where((t) => t.status == TaskStatus.done).length,
-        'active': _tasks.where((t) => t.status == TaskStatus.active).length,
-      };
+    'total': _tasks.length,
+    'favorites': _tasks.where((t) => t.isFavorite).length,
+    'done': _tasks.where((t) => t.status == TaskStatus.done).length,
+    'active': _tasks.where((t) => t.status == TaskStatus.active).length,
+  };
 
   // Фільтрований список завдань
   List<TaskModel> get _filteredTasks {
@@ -144,8 +146,9 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
   // 4. Зміна статусу enum (п. 12 ТЗ)
   void _toggleStatus(TaskModel task) {
     setState(() {
-      task.status =
-          task.status == TaskStatus.done ? TaskStatus.active : TaskStatus.done;
+      task.status = task.status == TaskStatus.done
+          ? TaskStatus.active
+          : TaskStatus.done;
     });
     _persistTasks();
     _showSnackBar(
@@ -168,23 +171,24 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
       _persistFavoriteIds();
     }
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final messenger = ScaffoldMessenger.of(context);
     messenger.hideCurrentSnackBar();
     messenger.showSnackBar(
       SnackBar(
         content: Text(
           'Завдання "${task.title}" видалено з JSON',
-          style: const TextStyle(
-            color: AppColors.onPrimary,
+          style: TextStyle(
+            color: AppColors.onAccent(isDark),
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.accent(isDark),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         action: SnackBarAction(
           label: 'СКАСУВАТИ',
-          textColor: AppColors.onPrimary,
+          textColor: AppColors.onAccent(isDark),
           onPressed: () {
             setState(() {
               _tasks.insert(index, task);
@@ -218,12 +222,12 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
               ),
               title: Row(
                 children: [
-                  const Icon(Icons.add_task, color: AppColors.primary),
+                  Icon(Icons.add_task, color: AppColors.accent(isDark)),
                   SizedBox(width: 8),
                   Text(
                     'Нове завдання (JSON)',
-                    style:
-                        AppStyles.title(isDark: isDark).copyWith(fontSize: 18),
+                    style: AppStyles.title(isDark: isDark)
+                        .copyWith(fontSize: 18),
                   ),
                 ],
               ),
@@ -250,8 +254,8 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                            color: AppColors.primary,
+                          borderSide: BorderSide(
+                            color: AppColors.accent(isDark),
                             width: 1.5,
                           ),
                         ),
@@ -268,7 +272,7 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
                         ),
                       ),
                       value: isFavorite,
-                      activeThumbColor: AppColors.primary,
+                      activeThumbColor: AppColors.accent(isDark),
                       onChanged: (val) {
                         setDialogState(() {
                           isFavorite = val;
@@ -288,8 +292,8 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.onPrimary,
+                    backgroundColor: AppColors.accent(isDark),
+                    foregroundColor: AppColors.onAccent(isDark),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -357,8 +361,8 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
                   SizedBox(width: 8),
                   Text(
                     'Редагувати #${task.id}',
-                    style:
-                        AppStyles.title(isDark: isDark).copyWith(fontSize: 18),
+                    style: AppStyles.title(isDark: isDark)
+                        .copyWith(fontSize: 18),
                   ),
                 ],
               ),
@@ -418,7 +422,7 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
                         ),
                       ),
                       value: isDone,
-                      activeThumbColor: AppColors.primary,
+                      activeThumbColor: AppColors.accent(isDark),
                       onChanged: (val) {
                         setDialogState(() {
                           isDone = val;
@@ -451,8 +455,9 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
                     setState(() {
                       task.title = text;
                       task.isFavorite = isFavorite;
-                      task.status =
-                          isDone ? TaskStatus.done : TaskStatus.active;
+                      task.status = isDone
+                          ? TaskStatus.done
+                          : TaskStatus.active;
                     });
                     _persistTasks();
 
@@ -492,17 +497,18 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
 
   void _showSnackBar(String text) {
     final messenger = ScaffoldMessenger.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     messenger.hideCurrentSnackBar();
     messenger.showSnackBar(
       SnackBar(
         content: Text(
           text,
-          style: const TextStyle(
-            color: AppColors.onPrimary,
+          style: TextStyle(
+            color: AppColors.onAccent(isDark),
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.accent(isDark),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         duration: const Duration(seconds: 2),
@@ -557,9 +563,9 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
           ),
           IconButton(
             tooltip: 'Додати завдання',
-            icon: const Icon(
+            icon: Icon(
               Icons.add_circle_outline,
-              color: AppColors.primary,
+              color: AppColors.accent(isDark),
             ),
             onPressed: _showAddTaskDialog,
           ),
@@ -571,7 +577,7 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.sync, color: AppColors.primary, size: 20),
+                    Icon(Icons.sync, color: AppColors.accent(isDark), size: 20),
                     SizedBox(width: 8),
                     Text(
                       'Завантаження завдань із JSON...',
@@ -601,9 +607,9 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
                         ),
                         child: Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.waving_hand,
-                              color: AppColors.primary,
+                              color: AppColors.accent(isDark),
                               size: 18,
                             ),
                             const SizedBox(width: 10),
@@ -695,8 +701,8 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.onPrimary,
+        backgroundColor: AppColors.accent(isDark),
+        foregroundColor: AppColors.onAccent(isDark),
         icon: const Icon(Icons.add),
         label: const Text(
           'Нове завдання',
@@ -723,10 +729,14 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
           height: 38,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : AppColors.card(isDark),
+            color: isSelected
+                ? AppColors.accent(isDark)
+                : AppColors.card(isDark),
             borderRadius: BorderRadius.circular(19),
             border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.border(isDark),
+              color: isSelected
+                  ? AppColors.accent(isDark)
+                  : AppColors.border(isDark),
               width: 1.5,
             ),
           ),
@@ -736,7 +746,7 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: isSelected
-                  ? AppColors.onPrimary
+                  ? AppColors.onAccent(isDark)
                   : AppColors.textSecondary(isDark),
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               fontSize: 12,

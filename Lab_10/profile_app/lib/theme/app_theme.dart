@@ -17,8 +17,8 @@ class AppTheme {
       fontFamily: AppStyles.fontFamily,
       scaffoldBackgroundColor: AppColors.lightBackground,
       colorScheme: const ColorScheme.light(
-        primary: AppColors.primary,
-        onPrimary: AppColors.onPrimary,
+        primary: AppColors.primaryLight,
+        onPrimary: Colors.white,
         secondary: AppColors.secondary,
         surface: AppColors.lightCard,
         onSurface: AppColors.lightText,
@@ -61,7 +61,10 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.primaryLight,
+            width: 1.5,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -85,8 +88,8 @@ class AppTheme {
       dividerColor: AppColors.lightBorder,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.onPrimary,
+          backgroundColor: AppColors.primaryLight,
+          foregroundColor: Colors.white,
           textStyle: AppStyles.button,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -97,12 +100,12 @@ class AppTheme {
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
           return states.contains(WidgetState.selected)
-              ? AppColors.primary
+              ? AppColors.primaryLight
               : AppColors.lightCard;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           return states.contains(WidgetState.selected)
-              ? AppColors.primary.withValues(alpha: 0.4)
+              ? AppColors.primaryLight.withValues(alpha: 0.4)
               : AppColors.lightSurface;
         }),
       ),
