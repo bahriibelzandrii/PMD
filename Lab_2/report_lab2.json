@@ -65,6 +65,10 @@
   {
    "type": "text",
    "text": "9. Для чого використовуються віджети Container, Padding та SizedBox? Container використовується для комплексного позиціонування, фону, меж і відступів; Padding — виключно для додавання внутрішніх відступів навколо віджета; а SizedBox — для задання фіксованих розмірів або проміжків."
+  },
+  {
+   "type": "text",
+   "text": "Репозиторій з кодом лабораторних робіт: https://github.com/bahriibelzandrii/PMD\nКод і матеріали цієї лабораторної роботи: https://github.com/bahriibelzandrii/PMD/tree/main/Lab_2"
   }
  ],
  "conclusion": "На цій лабораторній роботі, я опанував базову структуру Flutter-проєкту та компоненти Flutter UI, реалізував головний екран за Варіантом 1 («Менеджер завдань») із використанням віджетів Scaffold, AppBar, Center з кнопкою ElevatedButton та BottomNavigationBar, а також перевірив роботу інтерфейсу на емуляторі Android."

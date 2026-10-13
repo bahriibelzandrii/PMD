@@ -55,6 +55,10 @@
   {
    "type": "text",
    "text": "6. Для чого використовують властивість obscureText? Властивість obscureText (тип bool) маскує введений текст символів — застосовується для полів пароля, щоб зберігати секретність даних."
+  },
+  {
+   "type": "text",
+   "text": "Репозиторій з кодом лабораторних робіт: https://github.com/bahriibelzandrii/PMD\nКод і матеріали цієї лабораторної роботи: https://github.com/bahriibelzandrii/PMD/tree/main/Lab_8"
   }
  ],
  "conclusion": "На цій лабораторній роботі я сформував практичні навички роботи з формами введення даних у Flutter: створив екрани входу та реєстрації з повною валідацією полів (Form, TextFormField, TextEditingController, validator, obscureText), реалізував навігацію між екранами за допомогою Navigator.push() та Navigator.pushReplacement() з передачею імені користувача та привітанням на екрані TaskManagerScreen, інтегруючи його з лабораторної роботи №7. Працездатність перевірено 8 віджет-тестами та запуском на емуляторі Android."
