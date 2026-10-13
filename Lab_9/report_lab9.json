@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "course_code": "ПМД",
+    "course_name": "Програмування мобільних додатків",
+    "lab_number": 9,
+    "topic": "Теми оформлення та робота з ресурсами застосунку. Створення екрана профілю",
+    "author": "Багрія-Белз Андрій",
+    "group": "КН-2327Б",
+    "variant": null,
+    "objective": null,
+    "title_word": "ЗВІТ",
+    "title_style": "standard"
+  },
+  "body": [
+    {
+      "type": "task",
+      "text": "1. Реалізувати підтримку світлої та темної теми (Light / Dark mode).\n2. Додати перемикач теми (Switch або SwitchListTile).\n3. Підключити власний шрифт (Inter) до проєкту через pubspec.yaml.\n4. Додати графічні ресурси (зображення, аватар користувача в assets/images/).\n5. Використати стандартні Material Icons та власні PNG-іконки (assets/icons/).\n6. Створити екран ProfileScreen (монограма-аватар, ім'я, email, перемикач теми, іконки оформлення).\n7. Створити файл AppColors та додати власну палітру кольорів (primary, secondary, background, text).\n8. Використовувати AppColors у всьому застосунку замість жорстко закодованих стандартних кольорів.\n9. Створити файл AppStyles та визначити стилі тексту (title, subtitle, body, button, caption).\n10. Використовувати AppStyles у ProfileScreen та інших компонентах.\n11. Забезпечити єдиний стиль оформлення застосунку (однакові кольори, шрифти, узгоджені відступи).\n12. Перевірити коректну роботу застосунку у світлій та темній темах на емуляторі Android.\n"
+    },
+    {
+      "type": "code",
+      "label": "1 Написання коду-розв’язку завдання:",
+      "numbered": false,
+      "text": "// === pubspec.yaml (фрагмент) ===\nflutter:\n\n  # The following line ensures that the Material Icons font is\n  # included with your application, so that you can use the icons in\n  # the material Icons class.\n  uses-material-design: true\n\n  assets:\n    - assets/images/\n    - assets/icons/\n    - assets/data/\n\n  fonts:\n    - family: Inter\n      fonts:\n        - asset: assets/fonts/Inter-Regular.ttf\n        - asset: assets/fonts/Inter-SemiBold.ttf\n          weight: 600\n\n// === lib/theme/app_colors.dart (фрагмент) ===\nimport 'package:flutter/material.dart';\n\n/// Власна палітра кольорів застосунку AppColors (п. 7 ТЗ ЛР 9).\n/// Єдине джерело всіх кольорів застосунку, яке використовується замість\n/// стандартних (Colors.blue, Colors.black тощо, п. 8 ТЗ).\n///\n/// Палітра поєднує неоново-темний стиль, розпочатий у Лаборатрні №8,\n/// з новою світлою темою (Light / Dark mode, п. 1 ТЗ).\nclass AppColors {\n  AppColors._();\n\n  // ─── Основні брендові кольори ───────────────────────────────────────────\n  static const Color primary = Color(0xFFD4FF00); // Неоновий лайм (акцент)\n  static const Color onPrimary = Color(0xFF0D0F13); // Текст на neon-фоні\n  static const Color darkBackground = Color(0xFF0D0F13);\n  static const Color darkCard = Color(0xFF15181F);\n  static const Color darkSurface = Color(0xFF1F2430);\n  static const Color darkBorder = Color(0xFF2A3142);\n  static const Color darkText = Color(0xFFFFFFFF);\n  static const Color darkTextSecondary = Color(0xFF8B949E);\n  static const Color darkTextHint = Color(0xFF555F70);\n  static const Color darkTextDone = Color(0xFF6B7280);\n\n  // ─── Світла тема ─────────────────────────────────────────────────────────\n  static const Color lightBackground = Color(0xFFF1F3F6);\n  static const Color lightCard = Color(0xFFFFFFFF);\n  static const Color lightSurface = Color(0xFFE8ECF1);\n  static const Color lightBorder = Color(0xFFD8DEE6);\n  static const Color lightText = Color(0xFF171B21);\n  static const Color lightTextSecondary = Color(0xFF5F6772);\n  static const Color lightTextHint = Color(0xFF98A0AB);\n  static const Color lightTextDone = Color(0xFFA6ADB8);\n\n// === lib/theme/app_styles.dart (фрагмент) ===\nimport 'package:flutter/material.dart';\nimport 'app_colors.dart';\n\n/// Стандартизовані стилі тексту AppStyles (п. 9 ТЗ)\n/// Використовують підключений власний шрифт Inter (п. 3 ТЗ)\nclass AppStyles {\n  // Назва підключеного шрифту\n  static const String fontFamily = 'Inter';\n\n  // 1. Заголовок (title)\n  static TextStyle title({bool isDark = false, Color? color}) {\n    return TextStyle(\n      fontFamily: fontFamily,\n      fontSize: 24,\n      fontWeight: FontWeight.bold,\n      letterSpacing: -0.5,\n      color: color ?? (isDark ? AppColors.textDark : AppColors.textLight),\n    );\n  }\n\n  // 3. Основний текст (body)\n  static TextStyle body({bool isDark = false, Color? color, FontWeight? fontWeight}) {\n    return TextStyle(\n      fontFamily: fontFamily,\n      fontSize: 14,\n      fontWeight: fontWeight ?? FontWeight.normal,\n      height: 1.45,\n      color: color ?? (isDark ? AppColors.textDark : AppColors.textLight),\n    );\n  }\n\n  // 4. Стиль для кнопок (button)\n  static const TextStyle button = TextStyle(\n    fontFamily: fontFamily,\n    fontSize: 15,\n    fontWeight: FontWeight.w600,\n    letterSpacing: 0.3,\n    color: Colors.white,\n  );\n\n// === lib/theme/app_theme.dart (фрагмент) ===\n  /// Світла тема застосунку\n  static ThemeData get lightTheme {\n    return ThemeData(\n      useMaterial3: true,\n      brightness: Brightness.light,\n      fontFamily: AppStyles.fontFamily,\n      scaffoldBackgroundColor: AppColors.lightBackground,\n      colorScheme: const ColorScheme.light(\n        primary: AppColors.primary,\n        onPrimary: AppColors.onPrimary,\n        secondary: AppColors.secondary,\n        surface: AppColors.lightCard,\n        onSurface: AppColors.lightText,\n        error: AppColors.error,\n      ),\n  // ... (пропуск неістотних рядків)\n\n// === lib/main.dart ===\nimport 'package:flutter/material.dart';\n\nimport 'screens/welcome_screen.dart';\nimport 'theme/app_theme.dart';\n\nvoid main() {\n  runApp(const RegistrationApp());\n}\n\n/// Головний застосунок: продовження Лаборатної №8 (форми, навігація,\n/// JSON-менеджер завдань) + теми оформлення та екран профілю (ЛР 9).\nclass RegistrationApp extends StatefulWidget {\n  const RegistrationApp({super.key});\n\n  @override\n  State<RegistrationApp> createState() => _RegistrationAppState();\n}\n\nclass _RegistrationAppState extends State<RegistrationApp> {\n  /// Стан активної теми: true — темна, false — світла (п. 1, 2 ТЗ ЛР 9).\n  /// Зберігається у класі State та оновлюється виключно через setState().\n  bool _isDarkMode = true;\n\n  void _toggleTheme(bool isDark) {\n    setState(() {\n      _isDarkMode = isDark;\n    });\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Профіль, теми та ресурси — Лабораторна №9',\n      debugShowCheckedModeBanner: false,\n      // Світла та темна теми через ThemeData (п. 1, 11 ТЗ ЛР 9)\n      theme: AppTheme.lightTheme,\n      darkTheme: AppTheme.darkTheme,\n      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,\n      home: WelcomeScreen(onToggleTheme: _toggleTheme),\n    );\n  }\n}\n\n// === lib/screens/profile_screen.dart (фрагмент) ===\nimport 'package:flutter/material.dart';\n\nimport '../theme/app_colors.dart';\nimport '../theme/app_styles.dart';\n\n/// Екран профілю користувача ProfileScreen (п. 6 ТЗ)\nclass ProfileScreen extends StatelessWidget {\n  /// Ім'я користувача (п. 6 ТЗ)\n  final String? username;\n\n  /// Email користувача (п. 6 ТЗ)\n  final String? email;\n\n  /// Колбек для перемикання теми (п. 2 ТЗ)\n  final ValueChanged<bool>? onToggleTheme;\n\n  const ProfileScreen({\n    super.key,\n    this.username,\n    this.email,\n    this.onToggleTheme,\n  });\n  Widget build(BuildContext context) {\n    final isDark = Theme.of(context).brightness == Brightness.dark;\n\n    return Scaffold(\n      backgroundColor: AppColors.background(isDark),\n      appBar: AppBar(\n        leading: IconButton(\n          tooltip: 'Назад',\n          icon: Icon(Icons.arrow_back, color: AppColors.textSecondary(isDark)),\n          onPressed: () => Navigator.pop(context),\n        ),\n        title: Text(\n          'Профіль користувача',\n          style: AppStyles.title(isDark: isDark).copyWith(fontSize: 20),\n        ),\n        centerTitle: true,\n        backgroundColor: AppColors.card(isDark),\n        elevation: 0,\n        actions: [\n          IconButton(\n            tooltip: 'Вийти з облікового запису',\n            icon: Icon(Icons.logout, size: 20, color: AppColors.error),\n            onPressed: () => _confirmLogout(context, isDark),\n          ),\n        ],\n      ),\n  // ... (пропуск неістотних рядків)\n  /// Картка перемикання теми (п. 1, 2 ТЗ)\n  Widget _buildThemeSwitchCard(BuildContext context, bool isDark) {\n    return Material(\n      color: AppColors.card(isDark),\n      shape: RoundedRectangleBorder(\n        borderRadius: BorderRadius.circular(14),\n        side: BorderSide(color: AppColors.divider(isDark)),\n      ),\n      child: SwitchListTile(\n        key: const Key('theme_switch_tile'),\n        secondary: Container(\n          padding: const EdgeInsets.all(6),\n          decoration: BoxDecoration(\n            color: (isDark ? AppColors.secondary : AppColors.primary)\n                .withValues(alpha: 0.15),\n            shape: BoxShape.circle,\n          ),\n          child: Icon(\n            isDark ? Icons.dark_mode : Icons.light_mode,\n            size: 22,\n            color: isDark ? AppColors.secondary : AppColors.text(isDark),\n          ),\n        ),\n        title: Text(\n          'Темна тема (Dark Mode)',\n          style: TextStyle(\n            fontFamily: AppStyles.fontFamily,\n            fontWeight: FontWeight.w600,\n            fontSize: 15,\n            color: isDark ? AppColors.textDark : AppColors.textLight,\n          ),\n        ),\n        subtitle: Text(\n          isDark ? 'Увімкнено нічний режим' : 'Увімкнено денний режим',\n          style: AppStyles.caption(isDark: isDark),\n        ),\n        value: isDark,\n        activeThumbColor: AppColors.secondary,\n        onChanged: (bool value) {\n          onToggleTheme?.call(value);\n        },\n      ),\n    );\n  }"
+    },
+    {
+      "type": "result",
+      "label": "2 Результат виконання коду:",
+      "numbered": false,
+      "images": [
+        "Lab_9/assets/duo_1_profile_themes.png",
+        "Lab_9/assets/duo_2_options_dialog.png"
+      ]
+    },
+    {
+      "type": "text",
+      "text": "1. Що таке ThemeData у Flutter? ThemeData — клас глобальних налаштувань оформлення (ColorScheme, TextTheme, стилі компонентів); віджети отримують його через Theme.of(context) й автоматично адаптують вигляд до поточної теми."
+    },
+    {
+      "type": "text",
+      "text": "2. Для чого theme, darkTheme та themeMode? theme задає світлу тему, darkTheme — темну, а themeMode визначає, яка з них активна (ThemeMode.system / light / dark)."
+    },
+    {
+      "type": "text",
+      "text": "3. Як реалізувати перемикання світлої і темної теми? Змінну стану теми (bool або ThemeMode) зберігають у стані StatefulWidget, зв'язують з themeMode MaterialApp і перемикають перемикачем (Switch) через setState() — застосунок перебудовується в новій темі."
+    },
+    {
+      "type": "text",
+      "text": "4. Що таке ресурси (assets) у Flutter? Основні типи? Ресурси — статичні файли, які пакуються разом із застосунком: зображення (PNG, WebP), векторні SVG, шрифти (TTF, OTF), іконки та файли даних (JSON, ARB); реєструються в pubspec.yaml і доступні через AssetBundle."
+    },
+    {
+      "type": "text",
+      "text": "5. Як додати зображення та шрифти до Flutter-проєкту? Файли розміщують у каталогах assets/, реєструють у pubspec.yaml (розділи assets: та fonts:) і запускають flutter pub get; далі вони доступні через Image.asset() та fontFamily."
+    },
+    {
+      "type": "text",
+      "text": "6. Які типи іконок можна використовувати у Flutter? Стандартні векторні іконки SDK (Icon(Icons.name), CupertinoIcons), растрові PNG через Image.asset, векторні SVG через flutter_svg та власні іконошрифти."
+    },
+    {
+      "type": "text",
+      "text": "7. Що таке AppColors і для чого він використовується? AppColors — клас дизайн-токенів кольорів, єдине джерело всіх кольорів застосунку (primary, secondary, фони, текст): забезпечує однорідну палітру, спрощує темну тему та редизайн."
+    },
+    {
+      "type": "text",
+      "text": "8. Чому не рекомендується використовувати кольори напряму (Colors.blue)? Немає єдиної точки зміни кольорів, темна тема погано адаптується, а візуальна консистентність падає — кращі централізовані токени типу AppColors."
+    },
+    {
+      "type": "text",
+      "text": "9. Як використовувати власні кольори у ThemeData та віджетах? У ThemeData передають їх у colorScheme, scaffoldBackgroundColor, cardTheme; у віджетах отримують через AppColors.card(isDark) або Theme.of(context).colorScheme."
+    },
+    {
+      "type": "text",
+      "text": "10. Що таке AppStyles і яка його роль у проєкті? AppStyles — клас готових стилів тексту (title, subtitle, body, button, caption) на єдиному шрифті Inter: уніфікує типографіку й усуває дублювання TextStyle у верстці."
+    },
+    {
+      "type": "text",
+      "text": "11. Які основні елементи повинен містити екран профілю? Аватар (монограму), ім'я та контакти, опис/статус, блок статистики, перемикач теми, меню з іконками (персональні дані, безпека, сповіщення, параметри) та кнопки дій (редагування, вихід із підтвердженням)."
+    },
+    {
+      "type": "text",
+      "text": "12. Як забезпечити єдиний стиль оформлення застосунку? Централізувати кольори (AppColors) та типографіку (AppStyles), описати обидві теми в AppTheme і дотримуватися узгоджених відступів, радіусів і єдиного набору іконок."
+    }
+  ],
+  "conclusion": "На цій лабораторній роботі я ознайомився з можливостями оформлення Flutter-застосунку та закріпив основи роботи з ресурсами: створив власну палітру кольорів AppColors, стандартизовані стили тексту AppStyles та конфігурацію тем AppTheme (Light / Dark mode) із динамічним перемиканням через ThemeMode у StatefulWidget, підключив власний шрифт Inter та локальні графічні ресурси (зображення, PNG-іконки) через pubspec.yaml. Розробив екран профілю користувача ProfileScreen з монограмою-аватаром, перемикачем теми, іконками Material, діалогом виходу та snackbar-сповіщеннями. Працездатність перевірено 8 віджет-тестами та запуском на емуляторі Android."
+}

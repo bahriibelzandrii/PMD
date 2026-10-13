@@ -1,28 +1,38 @@
 import 'package:flutter/material.dart';
+
 import '../theme/app_colors.dart';
 import '../theme/app_styles.dart';
 
 /// Екран профілю користувача ProfileScreen (п. 6 ТЗ)
 class ProfileScreen extends StatelessWidget {
-  /// Поточний стан теми (true — темна, false — світла)
-  final bool isDarkMode;
+  /// Ім'я користувача (п. 6 ТЗ)
+  final String? username;
+
+  /// Email користувача (п. 6 ТЗ)
+  final String? email;
 
   /// Колбек для перемикання теми (п. 2 ТЗ)
-  final ValueChanged<bool> onToggleTheme;
+  final ValueChanged<bool>? onToggleTheme;
 
   const ProfileScreen({
     super.key,
-    required this.isDarkMode,
-    required this.onToggleTheme,
+    this.username,
+    this.email,
+    this.onToggleTheme,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isDark = isDarkMode;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: AppColors.background(isDark),
       appBar: AppBar(
+        leading: IconButton(
+          tooltip: 'Назад',
+          icon: Icon(Icons.arrow_back, color: AppColors.textSecondary(isDark)),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(
           'Профіль користувача',
           style: AppStyles.title(isDark: isDark).copyWith(fontSize: 20),
@@ -32,23 +42,8 @@ class ProfileScreen extends StatelessWidget {
         elevation: 0,
         actions: [
           IconButton(
-            tooltip: 'Налаштування',
-            icon: Image.asset(
-              'assets/icons/settings.png',
-              width: 22,
-              height: 22,
-            ),
-            onPressed: () {
-              _showSnackBar(context, 'Відкрито налаштування профілю');
-            },
-          ),
-          IconButton(
             tooltip: 'Вийти з облікового запису',
-            icon: Image.asset(
-              'assets/icons/logout.png',
-              width: 22,
-              height: 22,
-            ),
+            icon: Icon(Icons.logout, size: 20, color: AppColors.error),
             onPressed: () => _confirmLogout(context, isDark),
           ),
         ],
@@ -59,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // 1. Картка аватара та основної інформації (п. 4, 6 ТЗ)
+              // 1. Блок аватара та основної інформації (п. 4, 6 ТЗ)
               _buildHeaderCard(context, isDark),
 
               const SizedBox(height: 16),
@@ -74,7 +69,7 @@ class ProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // 4. Блок опцій профілю з власними іконками (п. 5, 6 ТЗ)
+              // 4. Блок опцій профілю (п. 5, 6 ТЗ)
               _buildOptionsCard(context, isDark),
 
               const SizedBox(height: 20),
@@ -83,16 +78,22 @@ class ProfileScreen extends StatelessWidget {
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppColors.onPrimary,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 icon: const Icon(Icons.edit_outlined, size: 20),
-                label: const Text('Редагувати профіль', style: AppStyles.button),
+                label: const Text(
+                  'Редагувати профіль',
+                  style: AppStyles.button,
+                ),
                 onPressed: () {
-                  _showSnackBar(context, 'Режим редагування профілю активовано');
+                  _showSnackBar(
+                    context,
+                    'Режим редагування профілю активовано',
+                  );
                 },
               ),
 
@@ -123,178 +124,185 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Картка заголовка з банером, аватаром, ім'ям та статусом
+  /// Мінімалістичний заголовок: монограма, ім'я, контакти та опис
+  /// (без банера та об'ємної картки)
   Widget _buildHeaderCard(BuildContext context, bool isDark) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.card(isDark),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.divider(isDark)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Банерне зображення зверху (п. 4 ТЗ)
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(17)),
-            child: Image.asset(
-              'assets/images/banner.png',
-              height: 90,
-              width: double.infinity,
-              fit: BoxFit.cover,
+    final name = username ?? 'Багрій-Белз Андрій';
+    return Column(
+      children: [
+        // Аватар-монограма на градієнті
+        Container(
+          width: 84,
+          height: 84,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [AppColors.primary, AppColors.secondary],
             ),
           ),
-          // Аватар із накладанням на банер
-          Transform.translate(
-            offset: const Offset(0, -42),
-            child: Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: AppColors.card(isDark),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.15),
-                        blurRadius: 8,
-                      ),
-                    ],
-                  ),
-                  child: const CircleAvatar(
-                    radius: 46,
-                    backgroundImage: AssetImage('assets/images/avatar.png'),
-                  ),
-                ),
-                // Бейдж онлайн-статусу
-                Container(
-                  margin: const EdgeInsets.only(right: 6, bottom: 4),
-                  width: 18,
-                  height: 18,
-                  decoration: BoxDecoration(
-                    color: AppColors.success,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColors.card(isDark),
-                      width: 3,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Transform.translate(
-            offset: const Offset(0, -32),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Column(
-                children: [
-                  // Ім'я користувача (п. 6 ТЗ)
-                  Text(
-                    'Багрій-Белз Андрій',
-                    textAlign: TextAlign.center,
-                    style: AppStyles.title(isDark: isDark),
-                  ),
-                  const SizedBox(height: 4),
-                  // Контактна інформація (email) (п. 6 ТЗ)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.email_outlined,
-                        size: 15,
-                        color: AppColors.primary,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'andrii.bagriy@nulp.ua',
-                        style: AppStyles.subtitle(isDark: isDark),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  // Короткий опис або статус (п. 6 ТЗ)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.surface(isDark),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      'Студент НУ «Львівська політехніка» | Група КН-2327Б\nРозробник мобільних додатків на Flutter 🚀',
-                      textAlign: TextAlign.center,
-                      style: AppStyles.body(isDark: isDark).copyWith(fontSize: 13),
-                    ),
-                  ),
-                ],
+          child: Center(
+            child: Text(
+              _initials(name),
+              style: const TextStyle(
+                fontFamily: AppStyles.fontFamily,
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+                color: AppColors.onPrimary,
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  /// Картка статистики та показників
-  Widget _buildStatsCard(bool isDark) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-      decoration: BoxDecoration(
-        color: AppColors.card(isDark),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.divider(isDark)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStatItem('Курс', '3-й', isDark),
-          _buildDivider(isDark),
-          _buildStatItem('Лабораторна', '№9', isDark, isHighlight: true),
-          _buildDivider(isDark),
-          _buildStatItem('Тема', isDark ? 'Dark' : 'Light', isDark),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatItem(String label, String value, bool isDark, {bool isHighlight = false}) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontFamily: AppStyles.fontFamily,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: isHighlight
-                ? AppColors.primary
-                : (isDark ? AppColors.textDark : AppColors.textLight),
-          ),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 14),
+        // Ім'я користувача (п. 6 ТЗ)
         Text(
-          label,
-          style: AppStyles.caption(isDark: isDark),
+          name,
+          textAlign: TextAlign.center,
+          style: AppStyles.title(isDark: isDark),
+        ),
+        const SizedBox(height: 4),
+        // Контактна інформація (email) (п. 6 ТЗ)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.alternate_email,
+              size: 15,
+              color: AppColors.textSecondary(isDark),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              email ?? 'andrii.bagriy@nulp.ua',
+              style: AppStyles.subtitle(isDark: isDark),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Розробник мобільних додатків на Flutter',
+          textAlign: TextAlign.center,
+          style: AppStyles.caption(isDark: isDark).copyWith(fontSize: 12),
         ),
       ],
     );
   }
 
-  Widget _buildDivider(bool isDark) {
+  /// Монограма аватара: «АБ» для профіля курсанта, інакше —
+  /// ініціали перших двох слів імені
+  String _initials(String name) {
+    if (name == 'Багрій-Белз Андрій') {
+      return 'АБ';
+    }
+    final parts = name.trim().split(RegExp(r'\s+'));
+    final buf = StringBuffer();
+    for (final part in parts.take(2)) {
+      if (part.isNotEmpty) {
+        buf.write(part[0].toUpperCase());
+      }
+    }
+    return buf.isEmpty ? 'АБ' : buf.toString();
+  }
+
+  /// Картка статистики та показників (стиль як у менеджера завдань)
+  Widget _buildStatsCard(bool isDark) {
     return Container(
-      width: 1,
-      height: 28,
-      color: AppColors.divider(isDark),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppColors.card(isDark),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.border(isDark)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.school_outlined,
+                color: AppColors.primary,
+                size: 18,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'Особисті дані',
+                style: TextStyle(
+                  color: AppColors.text(isDark),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              _buildStatItem(
+                'Курс',
+                '4-й',
+                isDark,
+                color: AppColors.text(isDark),
+              ),
+              const SizedBox(width: 8),
+              _buildStatItem(
+                'Лабораторна',
+                '№9',
+                isDark,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: 8),
+              _buildStatItem(
+                'Тема',
+                isDark ? 'Dark' : 'Light',
+                isDark,
+                color: AppColors.secondary,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
+    String label,
+    String value,
+    bool isDark, {
+    required Color color,
+  }) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+        decoration: BoxDecoration(
+          color: AppColors.surface(isDark),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color.withValues(alpha: 0.25), width: 1),
+        ),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                color: AppColors.textSecondary(isDark),
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -303,7 +311,7 @@ class ProfileScreen extends StatelessWidget {
     return Material(
       color: AppColors.card(isDark),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         side: BorderSide(color: AppColors.divider(isDark)),
       ),
       child: SwitchListTile(
@@ -315,10 +323,10 @@ class ProfileScreen extends StatelessWidget {
                 .withValues(alpha: 0.15),
             shape: BoxShape.circle,
           ),
-          child: Image.asset(
-            'assets/icons/theme.png',
-            width: 24,
-            height: 24,
+          child: Icon(
+            isDark ? Icons.dark_mode : Icons.light_mode,
+            size: 22,
+            color: isDark ? AppColors.secondary : AppColors.text(isDark),
           ),
         ),
         title: Text(
@@ -337,7 +345,7 @@ class ProfileScreen extends StatelessWidget {
         value: isDark,
         activeThumbColor: AppColors.secondary,
         onChanged: (bool value) {
-          onToggleTheme(value);
+          onToggleTheme?.call(value);
         },
       ),
     );
@@ -347,22 +355,26 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildOptionsCard(BuildContext context, bool isDark) {
     final options = [
       {
-        'iconPath': 'assets/icons/profile.png',
+        'icon': Icons.person_outline,
+        'color': AppColors.secondary,
         'title': 'Персональні дані',
         'subtitle': 'Редагування імені, контактів та біографії',
       },
       {
-        'iconPath': 'assets/icons/shield.png',
+        'icon': Icons.shield_outlined,
+        'color': AppColors.success,
         'title': 'Безпека та конфіденційність',
         'subtitle': 'Пароль, двофакторна автентифікація',
       },
       {
-        'iconPath': 'assets/icons/bell.png',
+        'icon': Icons.notifications_outlined,
+        'color': AppColors.warning,
         'title': 'Сповіщення',
         'subtitle': 'Push-сповіщення, системні нагадування',
       },
       {
-        'iconPath': 'assets/icons/settings.png',
+        'icon': Icons.settings_outlined,
+        'color': AppColors.textSecondary(isDark),
         'title': 'Параметри застосунку',
         'subtitle': 'Мова інтерфейсу, синхронізація, кеш',
       },
@@ -370,28 +382,29 @@ class ProfileScreen extends StatelessWidget {
     return Material(
       color: AppColors.card(isDark),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         side: BorderSide(color: AppColors.divider(isDark)),
       ),
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: options.length,
-        separatorBuilder: (context, index) => Divider(
-          color: AppColors.divider(isDark),
-          height: 1,
-          indent: 56,
-        ),
+        separatorBuilder: (context, index) =>
+            Divider(color: AppColors.divider(isDark), height: 1, indent: 56),
         itemBuilder: (context, index) {
           final opt = options[index];
           return ListTile(
-            leading: Image.asset(
-              opt['iconPath']!,
-              width: 28,
-              height: 28,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 6,
+            ),
+            leading: Icon(
+              opt['icon'] as IconData,
+              size: 22,
+              color: opt['color'] as Color,
             ),
             title: Text(
-              opt['title']!,
+              opt['title'] as String,
               style: TextStyle(
                 fontFamily: AppStyles.fontFamily,
                 fontWeight: FontWeight.w600,
@@ -400,7 +413,7 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              opt['subtitle']!,
+              opt['subtitle'] as String,
               style: AppStyles.caption(isDark: isDark),
             ),
             trailing: Icon(
@@ -424,7 +437,6 @@ class ProfileScreen extends StatelessWidget {
           message,
           style: const TextStyle(fontFamily: AppStyles.fontFamily),
         ),
-        backgroundColor: isDarkMode ? AppColors.darkCard : AppColors.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         duration: const Duration(seconds: 2),

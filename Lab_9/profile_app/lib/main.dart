@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
-import 'screens/profile_screen.dart';
+
+import 'screens/welcome_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
-  runApp(const ProfileApp());
+  runApp(const RegistrationApp());
 }
 
-/// Головний кореневий віджет застосунку ProfileApp
-class ProfileApp extends StatefulWidget {
-  const ProfileApp({super.key});
+/// Головний застосунок: продовження Лаборатної №8 (форми, навігація,
+/// JSON-менеджер завдань) + теми оформлення та екран профілю (ЛР 9).
+class RegistrationApp extends StatefulWidget {
+  const RegistrationApp({super.key});
 
   @override
-  State<ProfileApp> createState() => _ProfileAppState();
+  State<RegistrationApp> createState() => _RegistrationAppState();
 }
 
-class _ProfileAppState extends State<ProfileApp> {
-  // Стан активної теми: true — темна, false — світла (п. 1, 2 ТЗ)
+class _RegistrationAppState extends State<RegistrationApp> {
+  /// Стан активної теми: true — темна, false — світла (п. 1, 2 ТЗ ЛР 9).
+  /// Зберігається у класі State та оновлюється виключно через setState().
   bool _isDarkMode = true;
 
   void _toggleTheme(bool isDark) {
@@ -27,16 +30,13 @@ class _ProfileAppState extends State<ProfileApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Профіль та теми — Лабораторна №9',
+      title: 'Профіль, теми та ресурси — Лабораторна №9',
       debugShowCheckedModeBanner: false,
-      // Налаштування світлої та темної тем через ThemeData (п. 1, 11 ТЗ)
+      // Світла та темна теми через ThemeData (п. 1, 11 ТЗ ЛР 9)
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      home: ProfileScreen(
-        isDarkMode: _isDarkMode,
-        onToggleTheme: _toggleTheme,
-      ),
+      home: WelcomeScreen(onToggleTheme: _toggleTheme),
     );
   }
 }

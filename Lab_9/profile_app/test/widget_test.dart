@@ -1,106 +1,274 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:profile_app/main.dart';
-import 'package:profile_app/theme/app_colors.dart';
-import 'package:profile_app/theme/app_styles.dart';
+import 'package:profile_app/models/task_model.dart';
+import 'package:profile_app/screens/login_screen.dart';
+import 'package:profile_app/screens/register_screen.dart';
+import 'package:profile_app/screens/task_manager_screen.dart';
+import 'package:profile_app/screens/welcome_screen.dart';
+import 'package:profile_app/services/task_storage_service.dart';
+import 'package:profile_app/widgets/task_list_item.dart';
+
+List<TaskModel> getTestInitialTasks() {
+  return [
+    TaskModel(
+      id: 1,
+      title: 'Оптимізація запитів до бази даних',
+      isFavorite: true,
+      status: TaskStatus.active,
+    ),
+    TaskModel(
+      id: 2,
+      title: 'Рефакторинг архітектури Flutter-екранів',
+      isFavorite: false,
+      status: TaskStatus.done,
+    ),
+    TaskModel(
+      id: 3,
+      title: 'Інтеграція REST API та обробка помилок',
+      isFavorite: false,
+      status: TaskStatus.active,
+    ),
+    TaskModel(
+      id: 4,
+      title: 'Написання віджет-тестів та перевірка стану',
+      isFavorite: true,
+      status: TaskStatus.done,
+    ),
+    TaskModel(
+      id: 5,
+      title: 'Оновлення темної палітри кольорів Material 3',
+      isFavorite: false,
+      status: TaskStatus.active,
+    ),
+    TaskModel(
+      id: 6,
+      title: 'Підготовка збірки та публікація в Play Store',
+      isFavorite: false,
+      status: TaskStatus.active,
+    ),
+  ];
+}
 
 void main() {
-  testWidgets('1. Відображення екрана ProfileScreen та обов’язкових елементів', (
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  // Локalний JSON-файл, з якого TaskManagerScreen читає дані в тестах
+  final storageService = TaskStorageService();
+
+  setUp(() {
+    storageService.saveTasks(getTestInitialTasks());
+  });
+
+  void setPhoneSize(WidgetTester tester) {
+    tester.view.physicalSize = const Size(800, 1400);
+    tester.view.devicePixelRatio = 1.0;
+  }
+
+  Future<void> loadWelcome(WidgetTester tester) async {
+    await tester.pumpWidget(const RegistrationApp());
+    await tester.pumpAndSettle();
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+  }
+
+  Future<void> openRegister(WidgetTester tester) async {
+    await tester.tap(find.widgetWithText(OutlinedButton, 'Зареєструватися'));
+    await tester.pumpAndSettle();
+    expect(find.byType(RegisterScreen), findsOneWidget);
+  }
+
+  Future<void> openLogin(WidgetTester tester) async {
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Увійти'));
+    await tester.pumpAndSettle();
+    expect(find.byType(LoginScreen), findsOneWidget);
+  }
+
+  Future<void> fillRegisterForm(
+    WidgetTester tester, {
+    String username = 'Андрій',
+    String birthDate = '2004-05-15',
+    String email = 'test@example.com',
+    String password = 'secret123',
+    String confirm = 'secret123',
+  }) async {
+    await tester.enterText(find.byType(TextFormField).at(0), username);
+    await tester.enterText(find.byType(TextFormField).at(1), birthDate);
+    await tester.enterText(find.byType(TextFormField).at(2), email);
+    await tester.enterText(find.byType(TextFormField).at(3), password);
+    await tester.enterText(find.byType(TextFormField).at(4), confirm);
+  }
+
+  testWidgets('1. Welcome-екран: заголовок та кнопки входу й реєстрації', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(const ProfileApp());
-    await tester.pumpAndSettle();
+    setPhoneSize(tester);
+    addTearDown(tester.view.resetPhysicalSize);
 
-    // Перевірка наявності AppBar та імені користувача
-    expect(find.text('Профіль користувача'), findsOneWidget);
-    expect(find.text('Багрій-Белз Андрій'), findsOneWidget);
+    await loadWelcome(tester);
 
-    // Перевірка email та статусу
-    expect(find.text('andrii.bagriy@nulp.ua'), findsOneWidget);
+    expect(find.text('Менеджер завдань'), findsWidgets);
+    expect(find.widgetWithText(ElevatedButton, 'Увійти'), findsOneWidget);
     expect(
-      find.textContaining('Студент НУ «Львівська політехніка»'),
+      find.widgetWithText(OutlinedButton, 'Зареєструватися'),
       findsOneWidget,
     );
-
-    // Перевірка наявності перемикача теми
-    expect(find.text('Темна тема (Dark Mode)'), findsOneWidget);
-    expect(find.byKey(const Key('theme_switch_tile')), findsOneWidget);
-
-    // Перевірка наявності кнопок
-    expect(find.text('Редагувати профіль'), findsOneWidget);
-    expect(find.text('Вийти з акаунта'), findsOneWidget);
   });
 
-  testWidgets('2. Перемикання теми з темної (Dark) на світлу (Light)', (
+  testWidgets('2. Перехід на екран реєстрації з 5 полями та кнопкою', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(const ProfileApp());
-    await tester.pumpAndSettle();
+    setPhoneSize(tester);
+    addTearDown(tester.view.resetPhysicalSize);
 
-    // За замовчуванням темний режим
-    expect(find.text('Увімкнено нічний режим'), findsOneWidget);
+    await loadWelcome(tester);
+    await openRegister(tester);
 
-    // Натискаємо на SwitchListTile для перемикання на світлу тему
-    await tester.tap(find.byKey(const Key('theme_switch_tile')));
-    await tester.pumpAndSettle();
-
-    // Стан повинен оновитися на денний режим
-    expect(find.text('Увімкнено денний режим'), findsOneWidget);
+    expect(find.text('Реєстрація'), findsOneWidget);
+    expect(find.byType(Form), findsOneWidget);
+    expect(find.byType(TextFormField), findsNWidgets(5));
+    expect(find.text("Ім'я користувача"), findsOneWidget);
+    expect(find.text('Дата народження'), findsOneWidget);
+    expect(find.text('Електронна пошта (Email)'), findsOneWidget);
+    expect(find.text('Підтвердження пароля'), findsOneWidget);
+    expect(
+      find.widgetWithText(ElevatedButton, 'Зареєструватися'),
+      findsOneWidget,
+    );
   });
 
-  testWidgets('3. Повторне перемикання теми зі світлої назад у темну', (
+  testWidgets(
+    '3. Порожня форма реєстрації блокує перехід до менеджера завдань',
+    (WidgetTester tester) async {
+      setPhoneSize(tester);
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await loadWelcome(tester);
+      await openRegister(tester);
+
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Зареєструватися'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TaskManagerScreen), findsNothing);
+      expect(find.textContaining('не може бути порожнім'), findsWidgets);
+    },
+  );
+
+  testWidgets(
+    '4. Некоректні дані реєстрації блокують перехід (формати, @, паролі)',
+    (WidgetTester tester) async {
+      setPhoneSize(tester);
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await loadWelcome(tester);
+      await openRegister(tester);
+      await fillRegisterForm(
+        tester,
+        username: 'А',
+        birthDate: 'не-дата',
+        email: 'bezpoglushky',
+        password: '123',
+        confirm: 'inshy',
+      );
+
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Зареєструватися'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TaskManagerScreen), findsNothing);
+      expect(find.textContaining('щонайменше 3 символи'), findsOneWidget);
+      expect(find.textContaining('Некоректний формат дати'), findsOneWidget);
+      expect(find.textContaining('символ @'), findsOneWidget);
+      expect(find.textContaining('не менше 6 символів'), findsOneWidget);
+      expect(find.textContaining('збігатися'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    '5. Успішна реєстрація: перехід до менеджера завдань з іменем та списком із JSON',
+    (WidgetTester tester) async {
+      setPhoneSize(tester);
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await loadWelcome(tester);
+      await openRegister(tester);
+      await fillRegisterForm(tester);
+
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Зареєструватися'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TaskManagerScreen), findsOneWidget);
+      expect(find.text('Вітаємо, Андрій! 👋'), findsOneWidget);
+      expect(find.byType(TaskListItem), findsNWidgets(6));
+      expect(find.text('Менеджер завдань'), findsOneWidget);
+    },
+  );
+
+  testWidgets('6. Кнопка демо-даних заповнює валідну форму реєстрації', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(const ProfileApp());
+    setPhoneSize(tester);
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await loadWelcome(tester);
+    await openRegister(tester);
+
+    // Іконка автозаповнення в AppBar
+    await tester.tap(find.byTooltip('Заповнити тестовими даними'));
     await tester.pumpAndSettle();
 
-    // Перше перемикання: Dark -> Light
-    await tester.tap(find.byKey(const Key('theme_switch_tile')));
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Зареєструватися'));
     await tester.pumpAndSettle();
-    expect(find.text('Увімкнено денний режим'), findsOneWidget);
 
-    // Друге перемикання: Light -> Dark
-    await tester.tap(find.byKey(const Key('theme_switch_tile')));
-    await tester.pumpAndSettle();
-    expect(find.text('Увімкнено нічний режим'), findsOneWidget);
+    expect(find.byType(TaskManagerScreen), findsOneWidget);
+    expect(find.textContaining('Вітаємо, '), findsOneWidget);
   });
 
-  testWidgets('4. Перевірка цілісності палітри AppColors та стилів AppStyles', (
+  testWidgets('7. Вхід: порожня форма блокується, коректна веде до менеджера', (
     WidgetTester tester,
   ) async {
-    // Перевірка узгодженості кольорів
-    expect(AppColors.primary, const Color(0xFF4A90E2));
-    expect(AppColors.secondary, const Color(0xFFF5A623));
-    expect(AppColors.lightBackground, isNot(equals(AppColors.darkBackground)));
-    expect(AppColors.textLight, isNot(equals(AppColors.textDark)));
+    setPhoneSize(tester);
+    addTearDown(tester.view.resetPhysicalSize);
 
-    // Перевірка налаштування шрифту
-    expect(AppStyles.fontFamily, 'Inter');
-    expect(AppStyles.titleStatic.fontFamily, 'Inter');
-    expect(AppStyles.button.fontFamily, 'Inter');
+    await loadWelcome(tester);
+    await openLogin(tester);
+
+    // Спроба входу з порожніми полями
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Увійти'));
+    await tester.pumpAndSettle();
+    expect(find.byType(TaskManagerScreen), findsNothing);
+    expect(find.text('Введіть пароль'), findsOneWidget);
+
+    // Коректний вхід: ім'я бере з локальної частини email
+    await tester.enterText(find.byType(TextFormField).at(0), 'ivan@ukr.net');
+    await tester.enterText(find.byType(TextFormField).at(1), 'password1');
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Увійти'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TaskManagerScreen), findsOneWidget);
+    expect(find.text('Вітаємо, ivan! 👋'), findsOneWidget);
+    expect(find.byType(TaskListItem), findsNWidgets(6));
   });
 
-  testWidgets('5. Відображення діалогу підтвердження виходу з акаунта', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(const ProfileApp());
-    await tester.pumpAndSettle();
+  testWidgets(
+    '8. Вхід: чарівна кнопка автозаповнює форму та веде до менеджера',
+    (WidgetTester tester) async {
+      setPhoneSize(tester);
+      addTearDown(tester.view.resetPhysicalSize);
 
-    // Знаходимо та натискаємо кнопку виходу
-    final logoutButton = find.text('Вийти з акаунта');
-    await tester.ensureVisible(logoutButton);
-    await tester.tap(logoutButton);
-    await tester.pumpAndSettle();
+      await loadWelcome(tester);
+      await openLogin(tester);
 
-    // Перевіряємо відображення діалогового вікна AlertDialog
-    expect(find.byType(AlertDialog), findsOneWidget);
-    expect(find.text('Вихід із профілю'), findsOneWidget);
-    expect(find.text('Скасувати'), findsOneWidget);
+      // Чарівна кнопка у AppBar заповнює обидва поля
+      await tester.tap(find.byTooltip('Заповнити тестовими даними'));
+      await tester.pumpAndSettle();
+      expect(find.text('andrii.bagriy@nulp.ua'), findsOneWidget);
 
-    // Скасовуємо вихід
-    await tester.tap(find.text('Скасувати'));
-    await tester.pumpAndSettle();
+      // Вхід з заповненою формою
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Увійти'));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(AlertDialog), findsNothing);
-  });
+      expect(find.byType(TaskManagerScreen), findsOneWidget);
+      expect(find.text('Вітаємо, andrii.bagriy! 👋'), findsOneWidget);
+      expect(find.byType(TaskListItem), findsNWidgets(6));
+    },
+  );
 }
