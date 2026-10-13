@@ -1,75 +1,75 @@
 {
-  "meta": {
-    "course_code": "ПМД",
-    "course_name": "Програмування мобільних додатків",
-    "lab_number": 6,
-    "topic": "Робота з різними типами даних та моделями та відображення списками",
-    "author": "Багрія-Белз Андрій",
-    "group": "КН-2327Б",
-    "variant": null,
-    "objective": null,
-    "title_word": "ЗВІТ",
-    "title_style": "standard"
+ "meta": {
+  "course_code": "ПМД",
+  "course_name": "Програмування мобільних додатків",
+  "lab_number": 6,
+  "topic": "Робота з різними типами даних та моделями та відображення списками",
+  "author": "Багрія-Белз Андрій",
+  "group": "КН-2327Б",
+  "variant": null,
+  "objective": null,
+  "title_word": "ЗВІТ",
+  "title_style": "standard"
+ },
+ "body": [
+  {
+   "type": "task",
+   "text": "1. Продовжити роботу над проєктом, розпочатим у Лабораторній роботі №5.\n2. Створити окремий файл моделі (наприклад, item_model.dart).\n3. Описати class Model з мінімум 4 полями: int, string, bool, enum.\n4. Створити List<Model> — основне джерело даних екрану (мінімум 5 початкових елементів).\n5. Відобразити список з ListView.builder та ListTile.\n6. Реалізувати додавання, видалення елемента.\n7. Реалізувати зміну стану елемента (іконка «обране» перемикає isFavorite; зміна значення status (enum) кнопкою/довгим натисканням; оновлення через setState()).\n8. Створити Map<String, int> для статистики (загальна кількість елементів; кількість обраних; кількість виконаних)."
   },
-  "body": [
-    {
-      "type": "task",
-      "text": "1. Продовжити роботу над проєктом, розпочатим у Лабораторній роботі №5.\n2. Створити окремий файл моделі (наприклад, item_model.dart).\n3. Описати class Model з мінімум 4 полями: int, string, bool, enum.\n4. Створити List<Model> — основне джерело даних екрану (мінімум 5 початкових елементів).\n5. Відобразити список з ListView.builder та ListTile.\n6. Реалізувати додавання, видалення елемента.\n7. Реалізувати зміну стану елемента (іконка «обране» перемикає isFavorite; зміна значення status (enum) кнопкою/довгим натисканням; оновлення через setState()).\n8. Створити Map<String, int> для статистики (загальна кількість елементів; кількість обраних; кількість виконаних)."
-    },
-    {
-      "type": "code",
-      "label": "1 Написання коду-розв’язку завдання:",
-      "numbered": false,
-      "text": "// === lib/main.dart ===\nimport 'package:flutter/material.dart';\nimport 'screens/lab6_screen.dart';\n\nvoid main() {\n  runApp(const MyApp());\n}\n\nclass MyApp extends StatelessWidget {\n  const MyApp({super.key});\n\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Менеджер завдань — Лабораторна №6',\n      debugShowCheckedModeBanner: false,\n      theme: ThemeData(\n        useMaterial3: true,\n        colorScheme: ColorScheme.fromSeed(\n          seedColor: const Color(0xFFD4FF00),\n          brightness: Brightness.dark,\n          primary: const Color(0xFFD4FF00),\n          surface: const Color(0xFF15181F),\n        ),\n        scaffoldBackgroundColor: const Color(0xFF0D0F13),\n      ),\n      home: const Lab6Screen(),\n    );\n  }\n}\n\n// === lib/models/task_model.dart ===\n/// Перелік можливих статусів завдання (enum)\nenum TaskStatus {\n  active,\n  done,\n}\n\n/// Модель завдання (Model class) із 4 обов'язковими типами полів:\n/// - int (ідентифікатор)\n/// - String (назва завдання)\n/// - bool (прапорець обраного)\n/// - enum TaskStatus (поточний статус виконання)\nclass TaskModel {\n  final int id;\n  String title;\n  bool isFavorite;\n  TaskStatus status;\n\n  TaskModel({\n    required this.id,\n    required this.title,\n    this.isFavorite = false,\n    this.status = TaskStatus.active,\n  });\n\n  /// Зручний геттер для перевірки завершеності\n  bool get isDone => status == TaskStatus.done;\n\n  /// Метод для копіювання з модифікацією (за потреби)\n  TaskModel copyWith({\n    int? id,\n    String? title,\n    bool? isFavorite,\n    TaskStatus? status,\n  }) {\n    return TaskModel(\n      id: id ?? this.id,\n      title: title ?? this.title,\n      isFavorite: isFavorite ?? this.isFavorite,\n      status: status ?? this.status,\n    );\n  }\n}\n\n/// Початковий список завдань (мінімум 5 елементів згідно з ТЗ)\nList<TaskModel> getInitialTasks() {\n  return [\n    TaskModel(\n      id: 1,\n      title: 'Оптимізація запитів до бази даних',\n      isFavorite: true,\n      status: TaskStatus.active,\n    ),\n    TaskModel(\n      id: 2,\n      title: 'Рефакторинг архітектури Flutter-екранів',\n      isFavorite: false,\n      status: TaskStatus.done,\n    ),\n    TaskModel(\n      id: 3,\n      title: 'Інтеграція REST API та обробка помилок',\n      isFavorite: false,\n      status: TaskStatus.active,\n    ),\n    TaskModel(\n      id: 4,\n      title: 'Написання віджет-тестів та перевірка стану',\n      isFavorite: true,\n      status: TaskStatus.done,\n    ),\n    TaskModel(\n      id: 5,\n      title: 'Оновлення темної палітри кольорів Material 3',\n      isFavorite: false,\n      status: TaskStatus.active,\n    ),\n    TaskModel(\n      id: 6,\n      title: 'Підготовка збірки та публікація в Play Store',\n      isFavorite: false,\n      status: TaskStatus.active,\n    ),\n  ];\n}\n\n// === lib/screens/lab6_screen.dart (фрагмент) ===\nclass _Lab6ScreenState extends State<Lab6Screen> {\n  // Основне джерело даних екрана: List<TaskModel> (п. 4 ТЗ)\n  late List<TaskModel> _tasks;\n\n  // Поточний фільтр для зручності перегляду\n  TaskFilter _currentFilter = TaskFilter.all;\n\n  @override\n  void initState() {\n    super.initState();\n    // Ініціалізація мінімум 5 елементів\n    _tasks = getInitialTasks();\n  }\n\n  // Обчислення статистики у вигляді Map<String, int> (п. 8 ТЗ)\n  Map<String, int> get _statistics => {\n    'total': _tasks.length,\n    'favorites': _tasks.where((t) => t.isFavorite).length,\n    'done': _tasks.where((t) => t.status == TaskStatus.done).length,\n    'active': _tasks.where((t) => t.status == TaskStatus.active).length,\n  };\n\n  // Фільтрований список завдань\n  List<TaskModel> get _filteredTasks {\n    switch (_currentFilter) {\n      case TaskFilter.active:\n        return _tasks.where((t) => t.status == TaskStatus.active).toList();\n      case TaskFilter.done:\n        return _tasks.where((t) => t.status == TaskStatus.done).toList();\n      case TaskFilter.favorites:\n        return _tasks.where((t) => t.isFavorite).toList();\n      case TaskFilter.all:\n        return _tasks;\n    }\n  }\n\n  // Зміна обраного стану (п. 7 ТЗ)\n  void _toggleFavorite(TaskModel task) {\n    setState(() {\n      task.isFavorite = !task.isFavorite;\n    });\n    _showSnackBar(\n      task.isFavorite ? 'Додано до обраного ❤️' : 'Видалено з обраного 🤍',\n    );\n  }\n\n  // Зміна статусу enum (п. 7 ТЗ)\n  void _toggleStatus(TaskModel task) {\n    setState(() {\n      task.status = task.status == TaskStatus.done\n          ? TaskStatus.active\n          : TaskStatus.done;\n    });\n    _showSnackBar(\n      task.status == TaskStatus.done\n          ? 'Завдання виконано! 🎉'\n          : 'Завдання позначено як активне',\n    );\n  }\n  // ... (пропуск неістотних рядків)\n  @override\n  Widget build(BuildContext context) {\n    final filtered = _filteredTasks;\n\n    return Scaffold(\n  // ... (пропуск неістотних рядків)\n      body: SafeArea(\n        child: Padding(\n          padding: const EdgeInsets.symmetric(horizontal: 16.0),\n          child: Column(\n            crossAxisAlignment: CrossAxisAlignment.stretch,\n            children: [\n  // ... (пропуск неістотних рядків)\n              Expanded(\n                child: filtered.isEmpty\n  // ... (пропуск неістотних рядків)\n                    : ListView.builder(\n                        padding: const EdgeInsets.only(bottom: 80),\n                        itemCount: filtered.length,\n                        itemBuilder: (context, index) {\n                          final task = filtered[index];\n                          return TaskListItem(\n                            task: task,\n                            onToggleFavorite: () => _toggleFavorite(task),\n                            onToggleStatus: () => _toggleStatus(task),\n                            onDelete: () => _deleteTask(task),\n                          );\n                        },\n                      ),\n              ),\n            ],\n  // ... (пропуск неістотних рядків)\n}"
-    },
-    {
-      "type": "result",
-      "label": "2 Результат виконання коду:",
-      "numbered": false,
-      "images": [
-        "Lab_6/assets/emulator_duo.png"
-      ]
-    },
-    {
-      "type": "text",
-      "text": "1. Чим List відрізняється від Map у Dart? List — це впорядкована індексована колекція елементів, доступ до яких здійснюється за цілочисельним індексом (починаючи з 0), де елементи можуть дублюватися. Map — це асоціативна колекція пар «ключ — значення», де кожен ключ є унікальним, а доступ до значень виконується за відповідним ключем довільного типу (найчастіше String), що робить Map зручною структурою для словників, конфігурацій та агрегованої статистики."
-    },
-    {
-      "type": "text",
-      "text": "2. Для чого використовують enum? Наведіть приклад. Переліки (enum) використовують для визначення фіксованого, безпечного з точки зору типізації набору іменованих значень чи станів. Це запобігає друкарським помилкам, характерним для рядкових констант, та забезпечує вичерпну перевірку в операторах switch. Приклад у проєкті: enum TaskStatus { active, done }, де кожен об'єкт завдання може набувати лише одного зі суворо визначених статусів."
-    },
-    {
-      "type": "text",
-      "text": "3. Що таке модель даних (model class) і яку роль вона відіграє у Flutter-застосунку? Модель даних (Model Class) — це типізований користувацький клас Dart, що інкапсулює поля та логіку сутності предметної області (наприклад, TaskModel). Вона відокремлює шар бізнес-даних від віджетів інтерфейсу (UI), гарантує сувору типізацію, спрощує серіалізацію/десеріалізацію, покращує читабельність коду та полегшує тестування."
-    },
-    {
-      "type": "text",
-      "text": "4. Як додати елемент у List<Model> та оновити інтерфейс? Для додавання елемента викликається метод .add() (або .insert()) на екземплярі List<Model>. Щоб Flutter перемалював екран і відобразив новий рядок у списку, цю операцію огортають у виклик setState() всередині класу стану StatefulWidget: setState(() { _tasks.add(newTask); });. Це сигналізує фреймворку про необхідність повторного виклику build()."
-    },
-    {
-      "type": "text",
-      "text": "5. Яка різниця між методами map() і where() для списку? Метод where() виконує фільтрацію елементів за предикатом (bool Function(E)), повертаючи лише ті елементи, які задовольняють умову (наприклад, _tasks.where((t) => t.isFavorite)). Метод map() здійснює трансформацію/проекцію: він викликає функцію перетворення для кожного елемента й повертає нову колекцію змінених значень (наприклад, _tasks.map((t) => t.title)). Обидва методи повертають лінивий Iterable."
-    },
-    {
-      "type": "text",
-      "text": "6. Як реалізувати фільтрацію списку (наприклад, показувати лише обрані елементи)? Фільтрація реалізується за допомогою виклику методу .where() на основному списку: List<TaskModel> get filteredTasks => _tasks.where((t) => t.isFavorite).toList();. У ListView.builder передають довжину отриманого відфільтрованого списку в itemCount, а в itemBuilder будують елементи за індексом з filteredTasks[index]."
-    },
-    {
-      "type": "text",
-      "text": "7. Для чого використовується віджет ListView.builder? У чому його перевага? ListView.builder використовується для відображення динамічних або потенційно великих прокручуваних списків. Його ключова перевага полягає в оптимізації продуктивності та пам'яті через лінивий рендеринг (lazy rendering): itemBuilder генерує віджети рядків виключно тоді, коли вони потрапляють у видиму область екрана (viewport), не створюючи заздалегідь весь список у пам'яті."
-    },
-    {
-      "type": "text",
-      "text": "8. Що таке itemCount, itemBuilder та index у ListView.builder? itemCount — це цілочисельний параметр, який визначає загальну кількість елементів у списку. itemBuilder — функція зворотного виклику типу Widget Function(BuildContext, int), яка викликається рушієм рендерингу для побудови віджета конкретного рядка. index — порядковий номер (від 0 до itemCount - 1) поточного елемента, що рендериться у списку."
-    },
-    {
-      "type": "text",
-      "text": "9. Як змінити стан окремого елемента списку та оновити UI? Для зміни стану окремого елемента списку знаходять відповідний об'єкт моделі (за індексом index або id), змінюють значення потрібного поля (наприклад, task.isFavorite = !task.isFavorite або task.status = TaskStatus.done) та викликають setState(). Flutter ініціює перезапуск методу build(), викликаючи itemBuilder для видимих рядків і оновлюючи їхнє графічне відображення."
-    },
-    {
-      "type": "text",
-      "text": "10. Що станеться, якщо змінити дані моделі без виклику setState()? Змінна та відповідне поле об'єкта в оперативній пам'яті змінять своє значення, але фреймворк Flutter не отримає сповіщення про зміну стану. Екран не запланує перемалювання кадру, і користувацький інтерфейс залишиться зі застарілими даними доти, доки віджет випадково не перебудується внаслідок інших подій."
-    }
-  ],
-  "conclusion": "На цій лабораторній роботі, я опанував практичні навички роботи зі структурами даних List та Map у мові Dart, створив типізовану модель даних TaskModel з обов'язковими полями різних типів (int, String, bool, enum TaskStatus), реалізував динамічне відображення колекції об'єктів за допомогою віджетів ListView.builder та ListTile, впровадив додавання нових завдань через модальний діалог і вилучення елементів, налаштував зміну внутрішнього стану моделей через setState() (перемикання прапорця обраного та зміну enum-статусу кліком і довгим натисканням), реалізував підрахунок та візуалізацію аналітичної статистики у вигляді Map<String, int>, а також верифікував коректність інтерфейсу та бізнес-логіки автоматизованими тестами й на емуляторі Android."
+  {
+   "type": "code",
+   "label": "1 Написання коду-розв’язку завдання:",
+   "numbered": false,
+   "text": "// === lib/models/task_model.dart ===\nenum TaskStatus {\n  active,\n  done,\n}\n\nclass TaskModel {\n  final int id;\n  String title;\n  bool isFavorite;\n  TaskStatus status;\n\n  TaskModel({\n    required this.id,\n    required this.title,\n    this.isFavorite = false,\n    this.status = TaskStatus.active,\n  });\n}\n\nList<TaskModel> getInitialTasks() {\n  return [\n    // ... (пропуск неістотних рядків)\n  ];\n}\n\n// === lib/screens/lab6_screen.dart (фрагмент) ===\nclass _Lab6ScreenState extends State<Lab6Screen> {\n  late List<TaskModel> _tasks;\n  TaskFilter _currentFilter = TaskFilter.all;\n\n  @override\n  void initState() {\n    super.initState();\n    _tasks = getInitialTasks();\n  }\n\n  Map<String, int> get _statistics => {\n    'total': _tasks.length,\n    'favorites': _tasks.where((t) => t.isFavorite).length,\n    'done': _tasks.where((t) => t.status == TaskStatus.done).length,\n    'active': _tasks.where((t) => t.status == TaskStatus.active).length,\n  };\n\n  List<TaskModel> get _filteredTasks {\n    switch (_currentFilter) {\n      case TaskFilter.favorites:\n        return _tasks.where((t) => t.isFavorite).toList();\n      // ... (пропуск неістотних рядків)\n    }\n  }\n\n  void _toggleFavorite(TaskModel task) {\n    setState(() {\n      task.isFavorite = !task.isFavorite;\n    });\n  }\n\n  void _toggleStatus(TaskModel task) {\n    setState(() {\n      task.status = task.status == TaskStatus.done ? TaskStatus.active : TaskStatus.done;\n    });\n  }\n  // ... (пропуск неістотних рядків)\n}"
+  },
+  {
+   "type": "result",
+   "label": "2 Результат виконання коду:",
+   "numbered": false,
+   "images": [
+    "Lab_6/assets/emulator_duo.png"
+   ]
+  },
+  {
+   "type": "text",
+   "text": "1. Чим List відрізняється від Map у Dart? List — це впорядкована індексована колекція елементів, доступ до яких здійснюється за цілочисельним індексом (починаючи з 0), де елементи можуть дублюватися. Map — це асоціативна колекція пар «ключ — значення», де кожен ключ є унікальним, а доступ до значень виконується за відповідним ключем довільного типу (найчастіше String), що робить Map зручною структурою для словників, конфігурацій та агрегованої статистики."
+  },
+  {
+   "type": "text",
+   "text": "2. Для чого використовують enum? Наведіть приклад. Переліки (enum) використовують для визначення фіксованого, безпечного з точки зору типізації набору іменованих значень чи станів. Це запобігає друкарським помилкам, характерним для рядкових констант, та забезпечує вичерпну перевірку в операторах switch. Приклад у проєкті: enum TaskStatus { active, done }, де кожен об'єкт завдання може набувати лише одного зі суворо визначених статусів."
+  },
+  {
+   "type": "text",
+   "text": "3. Що таке модель даних (model class) і яку роль вона відіграє у Flutter-застосунку? Модель даних (Model Class) — це типізований користувацький клас Dart, що інкапсулює поля та логіку сутності предметної області (наприклад, TaskModel). Вона відокремлює шар бізнес-даних від віджетів інтерфейсу (UI), гарантує сувору типізацію, спрощує серіалізацію/десеріалізацію, покращує читабельність коду та полегшує тестування."
+  },
+  {
+   "type": "text",
+   "text": "4. Як додати елемент у List<Model> та оновити інтерфейс? Для додавання елемента викликається метод .add() (або .insert()) на екземплярі List<Model>. Щоб Flutter перемалював екран і відобразив новий рядок у списку, цю операцію огортають у виклик setState() всередині класу стану StatefulWidget: setState(() { _tasks.add(newTask); });. Це сигналізує фреймворку про необхідність повторного виклику build()."
+  },
+  {
+   "type": "text",
+   "text": "5. Яка різниця між методами map() і where() для списку? Метод where() виконує фільтрацію елементів за предикатом (bool Function(E)), повертаючи лише ті елементи, які задовольняють умову (наприклад, _tasks.where((t) => t.isFavorite)). Метод map() здійснює трансформацію/проекцію: він викликає функцію перетворення для кожного елемента й повертає нову колекцію змінених значень (наприклад, _tasks.map((t) => t.title)). Обидва методи повертають лінивий Iterable."
+  },
+  {
+   "type": "text",
+   "text": "6. Як реалізувати фільтрацію списку (наприклад, показувати лише обрані елементи)? Фільтрація реалізується за допомогою виклику методу .where() на основному списку: List<TaskModel> get filteredTasks => _tasks.where((t) => t.isFavorite).toList();. У ListView.builder передають довжину отриманого відфільтрованого списку в itemCount, а в itemBuilder будують елементи за індексом з filteredTasks[index]."
+  },
+  {
+   "type": "text",
+   "text": "7. Для чого використовується віджет ListView.builder? У чому його перевага? ListView.builder використовується для відображення динамічних або потенційно великих прокручуваних списків. Його ключова перевага полягає в оптимізації продуктивності та пам'яті через лінивий рендеринг (lazy rendering): itemBuilder генерує віджети рядків виключно тоді, коли вони потрапляють у видиму область екрана (viewport), не створюючи заздалегідь весь список у пам'яті."
+  },
+  {
+   "type": "text",
+   "text": "8. Що таке itemCount, itemBuilder та index у ListView.builder? itemCount — це цілочисельний параметр, який визначає загальну кількість елементів у списку. itemBuilder — функція зворотного виклику типу Widget Function(BuildContext, int), яка викликається рушієм рендерингу для побудови віджета конкретного рядка. index — порядковий номер (від 0 до itemCount - 1) поточного елемента, що рендериться у списку."
+  },
+  {
+   "type": "text",
+   "text": "9. Як змінити стан окремого елемента списку та оновити UI? Для зміни стану окремого елемента списку знаходять відповідний об'єкт моделі (за індексом index або id), змінюють значення потрібного поля (наприклад, task.isFavorite = !task.isFavorite або task.status = TaskStatus.done) та викликають setState(). Flutter ініціює перезапуск методу build(), викликаючи itemBuilder для видимих рядків і оновлюючи їхнє графічне відображення."
+  },
+  {
+   "type": "text",
+   "text": "10. Що станеться, якщо змінити дані моделі без виклику setState()? Змінна та відповідне поле об'єкта в оперативній пам'яті змінять своє значення, але фреймворк Flutter не отримає сповіщення про зміну стану. Екран не запланує перемалювання кадру, і користувацький інтерфейс залишиться зі застарілими даними доти, доки віджет випадково не перебудується внаслідок інших подій."
+  }
+ ],
+ "conclusion": "На цій лабораторній роботі, я опанував практичні навички роботи зі структурами даних List та Map у мові Dart, створив типізовану модель даних TaskModel з обов'язковими полями різних типів (int, String, bool, enum TaskStatus), реалізував динамічне відображення колекції об'єктів за допомогою віджетів ListView.builder та ListTile, впровадив додавання нових завдань через модальний діалог і вилучення елементів, налаштував зміну внутрішнього стану моделей через setState() (перемикання прапорця обраного та зміну enum-статусу кліком і довгим натисканням), реалізував підрахунок та візуалізацію аналітичної статистики у вигляді Map<String, int>, а також верифікував коректність інтерфейсу та бізнес-логіки автоматизованими тестами й на емуляторі Android."
 }

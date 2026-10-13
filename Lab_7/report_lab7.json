@@ -1,91 +1,91 @@
 {
-  "meta": {
-    "course_code": "ПМД",
-    "course_name": "Програмування мобільних додатків",
-    "lab_number": 7,
-    "topic": "Робота з JSON та підготовка даних для відображення",
-    "author": "Багрія-Белз Андрій",
-    "group": "КН-2327Б",
-    "variant": null,
-    "objective": null,
-    "title_word": "ЗВІТ",
-    "title_style": "standard"
+ "meta": {
+  "course_code": "ПМД",
+  "course_name": "Програмування мобільних додатків",
+  "lab_number": 7,
+  "topic": "Робота з JSON та підготовка даних для відображення",
+  "author": "Багрія-Белз Андрій",
+  "group": "КН-2327Б",
+  "variant": null,
+  "objective": null,
+  "title_word": "ЗВІТ",
+  "title_style": "standard"
+ },
+ "body": [
+  {
+   "type": "task",
+   "text": "1. Створити JSON-файл із початковими даними (мінімум 5 елементів: id, title, isFavorite, status).\n2. Додати створений JSON-файл у Flutter-проєкт (у папку assets).\n3. Додати шлях до JSON-файлу у файл pubspec.yaml.\n4. Реалізувати зчитування JSON-файлу у застосунку та перетворення даних у структури Dart.\n5. Створити модель даних (Model class) для опису одного елемента JSON.\n6. Реалізувати у моделі методи: fromJson() та toJson().\n7. Перетворити JSON-масив у список моделей (List<Model>).\n8. Відобразити дані у застосунку за допомогою ListView.builder.\n9. Реалізувати додавання нового елемента до списку.\n10. Реалізувати редагування існуючого елемента (зміну назви або статусу).\n11. Реалізувати видалення елемента зі списку.\n12. Реалізувати перемикання стану елемента (додати до обраного, змінити статус).\n13. Реалізувати запис оновлених даних у JSON-файл.\n14. Перевірити правильність відображення та оновлення даних у застосунку."
   },
-  "body": [
-    {
-      "type": "task",
-      "text": "1. Створити JSON-файл із початковими даними (мінімум 5 елементів: id, title, isFavorite, status).\n2. Додати створений JSON-файл у Flutter-проєкт (у папку assets).\n3. Додати шлях до JSON-файлу у файл pubspec.yaml.\n4. Реалізувати зчитування JSON-файлу у застосунку та перетворення даних у структури Dart.\n5. Створити модель даних (Model class) для опису одного елемента JSON.\n6. Реалізувати у моделі методи: fromJson() та toJson().\n7. Перетворити JSON-масив у список моделей (List<Model>).\n8. Відобразити дані у застосунку за допомогою ListView.builder.\n9. Реалізувати додавання нового елемента до списку.\n10. Реалізувати редагування існуючого елемента (зміну назви або статусу).\n11. Реалізувати видалення елемента зі списку.\n12. Реалізувати перемикання стану елемента (додати до обраного, змінити статус).\n13. Реалізувати запис оновлених даних у JSON-файл.\n14. Перевірити правильність відображення та оновлення даних у застосунку."
-    },
-    {
-      "type": "code",
-      "label": "1 Написання коду-розв’язку завдання:",
-      "numbered": false,
-      "text": "// === assets/data/tasks.json ===\n[\n  {\n    \"id\": 1,\n    \"title\": \"Оптимізація запитів до бази даних\",\n    \"isFavorite\": true,\n    \"status\": \"active\"\n  },\n  {\n    \"id\": 2,\n    \"title\": \"Рефакторинг архітектури Flutter-екранів\",\n    \"isFavorite\": false,\n    \"status\": \"done\"\n  },\n  {\n    \"id\": 3,\n    \"title\": \"Інтеграція REST API та обробка помилок\",\n    \"isFavorite\": false,\n    \"status\": \"active\"\n  },\n  {\n    \"id\": 4,\n    \"title\": \"Написання віджет-тестів та перевірка стану\",\n    \"isFavorite\": true,\n    \"status\": \"done\"\n  },\n  {\n    \"id\": 5,\n    \"title\": \"Оновлення темної палітри кольорів Material 3\",\n    \"isFavorite\": false,\n    \"status\": \"active\"\n  },\n  {\n    \"id\": 6,\n    \"title\": \"Підготовка збірки та публікація в Play Store\",\n    \"isFavorite\": false,\n    \"status\": \"active\"\n  }\n]\n\n// === lib/main.dart ===\nimport 'package:flutter/material.dart';\nimport 'screens/lab7_screen.dart';\n\nvoid main() {\n  runApp(const MyApp());\n}\n\nclass MyApp extends StatelessWidget {\n  const MyApp({super.key});\n\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Менеджер завдань — Лабораторна №7',\n      debugShowCheckedModeBanner: false,\n      theme: ThemeData(\n        useMaterial3: true,\n        colorScheme: ColorScheme.fromSeed(\n          seedColor: const Color(0xFFD4FF00),\n          brightness: Brightness.dark,\n          primary: const Color(0xFFD4FF00),\n          surface: const Color(0xFF15181F),\n        ),\n        scaffoldBackgroundColor: const Color(0xFF0D0F13),\n      ),\n      home: const Lab7Screen(),\n    );\n  }\n}\n\n// === lib/models/task_model.dart ===\nimport 'dart:convert';\n\n/// Перелік можливих статусів завдання (enum)\nenum TaskStatus {\n  active,\n  done,\n}\n\n/// Модель завдання (Model class) із 4 обов'язковими типами полів:\n/// - int (ідентифікатор)\n/// - String (назва завдання)\n/// - bool (прапорець обраного)\n/// - enum TaskStatus (поточний статус виконання)\nclass TaskModel {\n  final int id;\n  String title;\n  bool isFavorite;\n  TaskStatus status;\n\n  TaskModel({\n    required this.id,\n    required this.title,\n    this.isFavorite = false,\n    this.status = TaskStatus.active,\n  });\n\n  /// Конструктор для створення об'єкта з JSON (п. 6 ТЗ)\n  factory TaskModel.fromJson(Map<String, dynamic> json) {\n    return TaskModel(\n      id: json['id'] as int,\n      title: json['title'] as String,\n      isFavorite: json['isFavorite'] as bool? ?? false,\n      status: json['status'] == 'done' ? TaskStatus.done : TaskStatus.active,\n    );\n  }\n\n  /// Метод для серіалізації об'єкта у JSON-мапу (п. 6 ТЗ)\n  Map<String, dynamic> toJson() {\n    return {\n      'id': id,\n      'title': title,\n      'isFavorite': isFavorite,\n      'status': status.name,\n    };\n  }\n\n  /// Зручний геттер для перевірки завершеності\n  bool get isDone => status == TaskStatus.done;\n\n  /// Метод для створення модифікованої копії\n  TaskModel copyWith({\n    int? id,\n    String? title,\n    bool? isFavorite,\n    TaskStatus? status,\n  }) {\n    return TaskModel(\n      id: id ?? this.id,\n      title: title ?? this.title,\n      isFavorite: isFavorite ?? this.isFavorite,\n      status: status ?? this.status,\n    );\n  }\n}\n\n/// Перетворення JSON-рядка у список моделей (п. 7 ТЗ)\nList<TaskModel> tasksFromJson(String jsonString) {\n  final List<dynamic> data = jsonDecode(jsonString) as List<dynamic>;\n  return data.map((e) => TaskModel.fromJson(e as Map<String, dynamic>)).toList();\n}\n\n/// Серіалізація списку моделей у відформатований JSON-рядок\nString tasksToJson(List<TaskModel> tasks) {\n  const encoder = JsonEncoder.withIndent('  ');\n  return encoder.convert(tasks.map((e) => e.toJson()).toList());\n}\n\n// === lib/services/task_storage_service.dart ===\nimport 'dart:io';\nimport 'package:flutter/services.dart' show rootBundle;\nimport 'package:path_provider/path_provider.dart';\nimport '../models/task_model.dart';\n\n/// Сервіс для роботи з JSON-файлами (зчитування з assets та локальне збереження)\nclass TaskStorageService {\n  static const String assetPath = 'assets/data/tasks.json';\n  static const String localFileName = 'tasks.json';\n\n  File? _cachedFile;\n\n  /// 1. Зчитування початкового JSON-файлу з папки assets (п. 4 ТЗ)\n  Future<String> readJsonFromAssets() async {\n    return await rootBundle.loadString(assetPath);\n  }\n\n  /// 2. Отримання шляху до локального файлу в документах застосунку (path_provider)\n  Future<File> _getLocalFile() async {\n    if (_cachedFile != null) return _cachedFile!;\n\n    if (Platform.environment.containsKey('FLUTTER_TEST')) {\n      final tempDir = Directory.systemTemp;\n      _cachedFile = File('${tempDir.path}/tasks_test_$pid.json');\n      return _cachedFile!;\n    }\n\n    final directory = await getApplicationDocumentsDirectory();\n    _cachedFile = File('${directory.path}/$localFileName');\n    return _cachedFile!;\n  }\n\n  /// 3. Зчитування завдань:\n  /// Якщо існує локальний файл — читаємо з нього.\n  /// Якщо це перший запуск — зчитуємо з assets та копіюємо у локальний файл.\n  Future<List<TaskModel>> loadTasks() async {\n    try {\n      final file = await _getLocalFile();\n      if (file.existsSync()) {\n        final content = file.readAsStringSync();\n        if (content.trim().isNotEmpty) {\n          return tasksFromJson(content);\n        }\n      }\n    } catch (_) {\n      // У разі відсутності або помилки переходимо до assets\n    }\n\n    final assetJson = await readJsonFromAssets();\n    final tasks = tasksFromJson(assetJson);\n    await saveTasks(tasks);\n    return tasks;\n  }\n\n  /// 4. Запис списку моделей у локальний JSON-файл (п. 13 ТЗ)\n  Future<void> saveTasks(List<TaskModel> tasks) async {\n    try {\n      final file = await _getLocalFile();\n      final jsonString = tasksToJson(tasks);\n      file.writeAsStringSync(jsonString, flush: true);\n    } catch (_) {\n      // Ігноруємо помилки I/O\n    }\n  }\n\n  /// 5. Скидання списку до початкового стану з assets\n  Future<List<TaskModel>> resetToDefault() async {\n    final assetJson = await readJsonFromAssets();\n    final tasks = tasksFromJson(assetJson);\n    await saveTasks(tasks);\n    return tasks;\n  }\n}\n\n// === lib/screens/lab7_screen.dart (фрагмент) ===\nclass _Lab7ScreenState extends State<Lab7Screen> {\n  final TaskStorageService _storageService = TaskStorageService();\n\n  // Основне джерело даних: список моделей List<TaskModel> (п. 7 ТЗ)\n  List<TaskModel> _tasks = [];\n  bool _isLoading = true;\n\n  // Фільтр для перегляду\n  TaskFilter _currentFilter = TaskFilter.all;\n  // ... (пропуск неістотних рядків)\n  // 1. Зчитування даних із JSON-файлу (п. 4 ТЗ)\n  Future<void> _loadTasksFromJson() async {\n    try {\n      final loadedTasks = await _storageService.loadTasks();\n      if (mounted) {\n        setState(() {\n          _tasks = loadedTasks;\n          _isLoading = false;\n        });\n      }\n    } catch (e, st) {\n  // ... (пропуск неістотних рядків)\n    }\n  }\n\n  // 2. Збереження оновлених даних у JSON-файл (п. 13 ТЗ)\n  Future<void> _persistTasks() async {\n    await _storageService.saveTasks(_tasks);\n  }\n\n  // Обчислення статистики у вигляді Map<String, int>\n  Map<String, int> get _statistics => {\n    'total': _tasks.length,\n    'favorites': _tasks.where((t) => t.isFavorite).length,\n    'done': _tasks.where((t) => t.status == TaskStatus.done).length,\n    'active': _tasks.where((t) => t.status == TaskStatus.active).length,\n  };\n  // ... (пропуск неістотних рядків)\n  @override\n  Widget build(BuildContext context) {\n    final filtered = _filteredTasks;\n\n    return Scaffold(\n  // ... (пропуск неістотних рядків)\n                    // 1. Статистика у вигляді Map<String, int>\n                    StatsSummaryCard(stats: _statistics),\n                    const SizedBox(height: 14),\n\n                    // 2. Фільтри завдань\n                    Row(\n                      children: [\n                        _buildFilterChip(\n                          'Всі (${_tasks.length})',\n                          TaskFilter.all,\n                        ),\n  // ... (пропуск неістотних рядків)\n                      ],\n                    ),\n                    const SizedBox(height: 12),\n\n                    // 3. Основний список завдань ListView.builder (п. 8 ТЗ)\n                    Expanded(\n                      child: filtered.isEmpty\n  // ... (пропуск неістотних рядків)\n                          : ListView.builder(\n                              padding: const EdgeInsets.only(bottom: 80),\n                              itemCount: filtered.length,\n                              itemBuilder: (context, index) {\n                                final task = filtered[index];\n                                return TaskListItem(\n                                  task: task,\n  // ... (пропуск неістотних рядків)\n                                );\n                              },\n                            ),\n                    ),\n  // ... (пропуск неістотних рядків)\n  Widget _buildFilterChip(String label, TaskFilter filter) {\n    final isSelected = _currentFilter == filter;\n    return Expanded(\n      child: GestureDetector(\n        onTap: () {\n          if (_currentFilter != filter) {\n            setState(() {\n              _currentFilter = filter;\n            });\n          }\n        },\n  // ... (пропуск неістотних рядків)\n      ),\n    );\n  }\n}"
-    },
-    {
-      "type": "result",
-      "label": "2 Результат виконання коду:",
-      "numbered": false,
-      "images": [
-        "Lab_7/assets/emulator_duo.png"
-      ]
-    },
-    {
-      "type": "text",
-      "text": "1. Що таке JSON та для чого він використовується у програмуванні? JSON (JavaScript Object Notation) — це легкозважений текстовий формат представлення та обміну структурованими даними. Завдяки незалежності від платформи й мови програмування, простоті синтаксису та легкій людиночитній формі, JSON є загальноприйнятим стандартом для взаємодії клієнтських мобільних застосунків із веб-серверами через REST API, а також для збереження локальних конфігурацій і кешу на пристрої."
-    },
-    {
-      "type": "text",
-      "text": "2. Які основні елементи структури JSON? Основу синтаксису JSON складають два типи структур: об'єкти та масиви. Об'єкт — це невпорядкований набір пар «ключ : значення», який записується у фігурних дужках { }, де ключ завжди є рядком у подвійних лапках. Масив — це впорядкована послідовність значень (елементів), яка записується у квадратних дужках [ ], де елементи відокремлюються комами."
-    },
-    {
-      "type": "text",
-      "text": "3. Які типи даних можуть використовуватися у JSON? У форматі JSON підтримуються такі базові типи значень: рядок (String, обов'язково у подвійних лапках \"...\"), число (Number, цілі або з плаваючою крапкою), логічне значення (Boolean: true або false), порожнє значення (null), масив (Array: [ ... ]) та вкладений об'єкт (Object: { ... })."
-    },
-    {
-      "type": "text",
-      "text": "4. Яку бібліотеку використовують у Dart для роботи з JSON? Для роботи з форматом JSON у мові Dart використовується стандартна бібліотека dart:convert (import 'dart:convert';). Вона надає готові утиліти для серіалізації та десеріалізації: функції jsonDecode() та jsonEncode(), а також класи JsonDecoder і JsonEncoder."
-    },
-    {
-      "type": "text",
-      "text": "5. Яка різниця між функціями jsonDecode() та jsonEncode()? Функція jsonDecode() приймає текстовий рядок у форматі JSON (String) та виконує парсинг, перетворюючи його на відповідні структури даних Dart (Map або List). Навпаки, функція jsonEncode() виконує серіалізацію — перетворює об'єкти Dart (наприклад, Map, List чи примітивні типи) на текстовий рядок формату JSON."
-    },
-    {
-      "type": "text",
-      "text": "6. У який тип даних перетворюється JSON-об’єкт після декодування? Після виконання функції jsonDecode() кореневий або вкладений JSON-об'єкт { } перетворюється у мові Dart на асоціативний масив типу Map<String, dynamic>, де ключами є рядки, а значеннями — динамічні сутності, тип яких визначається за вмістом кожного поля."
-    },
-    {
-      "type": "text",
-      "text": "7. У який тип даних перетворюється JSON-масив після декодування? Після виклику jsonDecode() кореневий або вкладений JSON-масив [ ] перетворюється у мові Dart на список динамічних елементів типу List<dynamic>. Надалі кожен елемент цього списку зазвичай кастується до Map<String, dynamic> або обробляється фабричним конструктором моделі."
-    },
-    {
-      "type": "text",
-      "text": "8. Як зчитати JSON-файл з папки assets у Flutter? Для зчитування вбудованого ресурсу з каталогу assets використовують клас rootBundle із пакету flutter/services.dart: final String jsonString = await rootBundle.loadString('assets/data/tasks.json');. Для коректної роботи шлях до файлу або каталогу обов'язково попередньо декларується у секції flutter -> assets файлу конфігурації pubspec.yaml."
-    },
-    {
-      "type": "text",
-      "text": "9. Як записати JSON-дані у файл на пристрої? Запис здійснюється за допомогою класу File із бібліотеки dart:io: final file = File(filePath); await file.writeAsString(jsonString);. Попередньо шлях до каталогу файлів застосунку (наприклад, Documents directory) отримують за допомогою функції getApplicationDocumentsDirectory() із плагіна path_provider, після чого перетворюють колекцію моделей у JSON-рядок через jsonEncode() і зберігають його на диску."
-    },
-    {
-      "type": "text",
-      "text": "10. Для чого використовується пакет path_provider? Пакет path_provider надає уніфікований міжплатформний доступ до стандартних системних шляхів збереження файлів на мобільних і десктопних операційних системах (Android, iOS, Windows, macOS, Linux). Він дозволяє без прив'язки до специфіки конкретної ОС отримати шлях до каталогу документів користувача (getApplicationDocumentsDirectory()), каталогу тимчасових файлів кешу (getTemporaryDirectory()) тощо."
-    },
-    {
-      "type": "text",
-      "text": "11. Яке призначення методу fromJson()? Метод fromJson() (найчастіше реалізований як фабричний конструктор factory Model.fromJson(Map<String, dynamic> json)) призначений для створення типізованого об'єкта моделі на основі десеріалізованої з JSON мапи. Він виконує безпечне перетворення типів, встановлює значення за замовчуванням та конвертує примітивні типи (наприклад, String) у спеціалізовані сутності (enum або DateTime)."
-    },
-    {
-      "type": "text",
-      "text": "12. Яке призначення методу toJson()? Метод toJson() виконує зворотну операцію серіалізації: він перетворює екземпляр моделі Dart у мапу Map<String, dynamic>. У цій мапі всі складні типи (наприклад, enum чи Date) переводяться у стандартні типи, зрозумілі формату JSON (рядки, числа, логічні значення), що дає змогу передати мапу у функцію jsonEncode()."
-    },
-    {
-      "type": "text",
-      "text": "13. Як перетворити JSON-масив у список моделей? Спочатку вхідний JSON-рядок декодується за допомогою jsonDecode() у список dynamic-елементів (List<dynamic>). Потім за допомогою методу .map() кожен елемент списку (який є Map<String, dynamic>) передається у фабричний конструктор моделі fromJson() і результат приводиться до типізованого списку через .toList(): final List<TaskModel> items = (jsonDecode(jsonString) as List).map((e) => TaskModel.fromJson(e)).toList();."
-    },
-    {
-      "type": "text",
-      "text": "14. Які операції можна виконувати з даними, що зберігаються у JSON-файлі? Із даними у JSON-файлі можна виконувати повний набір операцій CRUD: Create (додавання нових записів із подальшою перезаписами файлу), Read (зчитування та парсинг файлу під час завантаження екрана), Update (редагування властивостей існуючих записів, наприклад, зміна назви, прапорця обраного чи статусу enum) та Delete (видалення запису зі списку та збереження актуального стану колекції у файл)."
-    }
-  ],
-  "conclusion": "На цій лабораторній роботі, я опанував практичні навички роботи з форматом JSON у мові Dart та фреймворку Flutter, створив початковий файл assets/data/tasks.json та зареєстрував його в pubspec.yaml, реалізував типізовану модель даних TaskModel із методами серіалізації fromJson() та toJson(), побудував сервіс збереження даних TaskStorageService з використанням бібліотеки path_provider та пакету dart:convert, реалізував відображення динамічного списку через ListView.builder та ListTile, додав операції створення, редагування, вилучення завдань та перемикання станів із миттєвою синхронізацією у локальний JSON-файл, а також перевірив коректність роботи бізнес-логіки та інтерфейсу за допомогою автоматизованих тестів та на емуляторі Android."
+  {
+   "type": "code",
+   "label": "1 Написання коду-розв’язку завдання:",
+   "numbered": false,
+   "text": "// === assets/data/tasks.json (фрагмент) ===\n[\n  {\n    \"id\": 1,\n    \"title\": \"Оптимізація запитів до бази даних\",\n    \"isFavorite\": true,\n    \"status\": \"active\"\n  },\n  // ... (пропуск неістотних рядків)\n]\n\n// === lib/models/task_model.dart ===\nclass TaskModel {\n  final int id;\n  String title;\n  bool isFavorite;\n  TaskStatus status;\n\n  factory TaskModel.fromJson(Map<String, dynamic> json) {\n    return TaskModel(\n      id: json['id'] as int,\n      title: json['title'] as String,\n      isFavorite: json['isFavorite'] as bool? ?? false,\n      status: json['status'] == 'done' ? TaskStatus.done : TaskStatus.active,\n    );\n  }\n\n  Map<String, dynamic> toJson() {\n    return {\n      'id': id,\n      'title': title,\n      'isFavorite': isFavorite,\n      'status': status.name,\n    };\n  }\n}\n\n// === lib/services/task_storage_service.dart (фрагмент) ===\nclass TaskStorageService {\n  static const String assetPath = 'assets/data/tasks.json';\n  static const String localFileName = 'tasks.json';\n\n  Future<String> readJsonFromAssets() async {\n    return await rootBundle.loadString(assetPath);\n  }\n\n  Future<File> _getLocalFile() async {\n    final directory = await getApplicationDocumentsDirectory();\n    return File('${directory.path}/$localFileName');\n  }\n\n  Future<List<TaskModel>> loadTasks() async {\n    // ... (пропуск неістотних рядків)\n    final assetJson = await readJsonFromAssets();\n    final tasks = tasksFromJson(assetJson);\n    await saveTasks(tasks);\n    return tasks;\n  }\n\n  Future<void> saveTasks(List<TaskModel> tasks) async {\n    final file = await _getLocalFile();\n    file.writeAsStringSync(tasksToJson(tasks), flush: true);\n  }\n}\n\n// === lib/screens/lab7_screen.dart (фрагмент) ===\n  Future<void> _loadTasksFromJson() async {\n    final loadedTasks = await _storageService.loadTasks();\n    if (mounted) {\n      setState(() {\n        _tasks = loadedTasks;\n        _isLoading = false;\n      });\n    }\n  }\n\n  Future<void> _persistTasks() async {\n    await _storageService.saveTasks(_tasks);\n  }"
+  },
+  {
+   "type": "result",
+   "label": "2 Результат виконання коду:",
+   "numbered": false,
+   "images": [
+    "Lab_7/assets/emulator_duo.png"
+   ]
+  },
+  {
+   "type": "text",
+   "text": "1. Що таке JSON та для чого він використовується у програмуванні? JSON (JavaScript Object Notation) — це легкозважений текстовий формат представлення та обміну структурованими даними. Завдяки незалежності від платформи й мови програмування, простоті синтаксису та легкій людиночитній формі, JSON є загальноприйнятим стандартом для взаємодії клієнтських мобільних застосунків із веб-серверами через REST API, а також для збереження локальних конфігурацій і кешу на пристрої."
+  },
+  {
+   "type": "text",
+   "text": "2. Які основні елементи структури JSON? Основу синтаксису JSON складають два типи структур: об'єкти та масиви. Об'єкт — це невпорядкований набір пар «ключ : значення», який записується у фігурних дужках { }, де ключ завжди є рядком у подвійних лапках. Масив — це впорядкована послідовність значень (елементів), яка записується у квадратних дужках [ ], де елементи відокремлюються комами."
+  },
+  {
+   "type": "text",
+   "text": "3. Які типи даних можуть використовуватися у JSON? У форматі JSON підтримуються такі базові типи значень: рядок (String, обов'язково у подвійних лапках \"...\"), число (Number, цілі або з плаваючою крапкою), логічне значення (Boolean: true або false), порожнє значення (null), масив (Array: [ ... ]) та вкладений об'єкт (Object: { ... })."
+  },
+  {
+   "type": "text",
+   "text": "4. Яку бібліотеку використовують у Dart для роботи з JSON? Для роботи з форматом JSON у мові Dart використовується стандартна бібліотека dart:convert (import 'dart:convert';). Вона надає готові утиліти для серіалізації та десеріалізації: функції jsonDecode() та jsonEncode(), а також класи JsonDecoder і JsonEncoder."
+  },
+  {
+   "type": "text",
+   "text": "5. Яка різниця між функціями jsonDecode() та jsonEncode()? Функція jsonDecode() приймає текстовий рядок у форматі JSON (String) та виконує парсинг, перетворюючи його на відповідні структури даних Dart (Map або List). Навпаки, функція jsonEncode() виконує серіалізацію — перетворює об'єкти Dart (наприклад, Map, List чи примітивні типи) на текстовий рядок формату JSON."
+  },
+  {
+   "type": "text",
+   "text": "6. У який тип даних перетворюється JSON-об’єкт після декодування? Після виконання функції jsonDecode() кореневий або вкладений JSON-об'єкт { } перетворюється у мові Dart на асоціативний масив типу Map<String, dynamic>, де ключами є рядки, а значеннями — динамічні сутності, тип яких визначається за вмістом кожного поля."
+  },
+  {
+   "type": "text",
+   "text": "7. У який тип даних перетворюється JSON-масив після декодування? Після виклику jsonDecode() кореневий або вкладений JSON-масив [ ] перетворюється у мові Dart на список динамічних елементів типу List<dynamic>. Надалі кожен елемент цього списку зазвичай кастується до Map<String, dynamic> або обробляється фабричним конструктором моделі."
+  },
+  {
+   "type": "text",
+   "text": "8. Як зчитати JSON-файл з папки assets у Flutter? Для зчитування вбудованого ресурсу з каталогу assets використовують клас rootBundle із пакету flutter/services.dart: final String jsonString = await rootBundle.loadString('assets/data/tasks.json');. Для коректної роботи шлях до файлу або каталогу обов'язково попередньо декларується у секції flutter -> assets файлу конфігурації pubspec.yaml."
+  },
+  {
+   "type": "text",
+   "text": "9. Як записати JSON-дані у файл на пристрої? Запис здійснюється за допомогою класу File із бібліотеки dart:io: final file = File(filePath); await file.writeAsString(jsonString);. Попередньо шлях до каталогу файлів застосунку (наприклад, Documents directory) отримують за допомогою функції getApplicationDocumentsDirectory() із плагіна path_provider, після чого перетворюють колекцію моделей у JSON-рядок через jsonEncode() і зберігають його на диску."
+  },
+  {
+   "type": "text",
+   "text": "10. Для чого використовується пакет path_provider? Пакет path_provider надає уніфікований міжплатформний доступ до стандартних системних шляхів збереження файлів на мобільних і десктопних операційних системах (Android, iOS, Windows, macOS, Linux). Він дозволяє без прив'язки до специфіки конкретної ОС отримати шлях до каталогу документів користувача (getApplicationDocumentsDirectory()), каталогу тимчасових файлів кешу (getTemporaryDirectory()) тощо."
+  },
+  {
+   "type": "text",
+   "text": "11. Яке призначення методу fromJson()? Метод fromJson() (найчастіше реалізований як фабричний конструктор factory Model.fromJson(Map<String, dynamic> json)) призначений для створення типізованого об'єкта моделі на основі десеріалізованої з JSON мапи. Він виконує безпечне перетворення типів, встановлює значення за замовчуванням та конвертує примітивні типи (наприклад, String) у спеціалізовані сутності (enum або DateTime)."
+  },
+  {
+   "type": "text",
+   "text": "12. Яке призначення методу toJson()? Метод toJson() виконує зворотну операцію серіалізації: він перетворює екземпляр моделі Dart у мапу Map<String, dynamic>. У цій мапі всі складні типи (наприклад, enum чи Date) переводяться у стандартні типи, зрозумілі формату JSON (рядки, числа, логічні значення), що дає змогу передати мапу у функцію jsonEncode()."
+  },
+  {
+   "type": "text",
+   "text": "13. Як перетворити JSON-масив у список моделей? Спочатку вхідний JSON-рядок декодується за допомогою jsonDecode() у список dynamic-елементів (List<dynamic>). Потім за допомогою методу .map() кожен елемент списку (який є Map<String, dynamic>) передається у фабричний конструктор моделі fromJson() і результат приводиться до типізованого списку через .toList(): final List<TaskModel> items = (jsonDecode(jsonString) as List).map((e) => TaskModel.fromJson(e)).toList();."
+  },
+  {
+   "type": "text",
+   "text": "14. Які операції можна виконувати з даними, що зберігаються у JSON-файлі? Із даними у JSON-файлі можна виконувати повний набір операцій CRUD: Create (додавання нових записів із подальшою перезаписами файлу), Read (зчитування та парсинг файлу під час завантаження екрана), Update (редагування властивостей існуючих записів, наприклад, зміна назви, прапорця обраного чи статусу enum) та Delete (видалення запису зі списку та збереження актуального стану колекції у файл)."
+  }
+ ],
+ "conclusion": "На цій лабораторній роботі, я опанував практичні навички роботи з форматом JSON у мові Dart та фреймворку Flutter, створив початковий файл assets/data/tasks.json та зареєстрував його в pubspec.yaml, реалізував типізовану модель даних TaskModel із методами серіалізації fromJson() та toJson(), побудував сервіс збереження даних TaskStorageService з використанням бібліотеки path_provider та пакету dart:convert, реалізував відображення динамічного списку через ListView.builder та ListTile, додав операції створення, редагування, вилучення завдань та перемикання станів із миттєвою синхронізацією у локальний JSON-файл, а також перевірив коректність роботи бізнес-логіки та інтерфейсу за допомогою автоматизованих тестів та на емуляторі Android."
 }

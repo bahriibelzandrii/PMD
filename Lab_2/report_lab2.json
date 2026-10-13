@@ -1,71 +1,71 @@
 {
-  "meta": {
-    "course_code": "ПМД",
-    "course_name": "Програмування мобільних додатків",
-    "lab_number": 2,
-    "topic": "Базова структура Flutter проєкту та основи Flutter UI",
-    "author": "Багрія-Белз Андрій",
-    "group": "КН-2327Б",
-    "variant": null,
-    "objective": null,
-    "title_word": "ЗВІТ",
-    "title_style": "standard"
+ "meta": {
+  "course_code": "ПМД",
+  "course_name": "Програмування мобільних додатків",
+  "lab_number": 2,
+  "topic": "Базова структура Flutter проєкту та основи Flutter UI",
+  "author": "Багрія-Белз Андрій",
+  "group": "КН-2327Б",
+  "variant": null,
+  "objective": null,
+  "title_word": "ЗВІТ",
+  "title_style": "standard"
+ },
+ "body": [
+  {
+   "type": "task",
+   "text": "Створити головний екран застосунку згідно Варіанту 1 («Менеджер завдань») з використанням віджетів Scaffold, AppBar, Center з ElevatedButton(\"Додати завдання\") та BottomNavigationBar із двома пунктами («Список» та іконка задачі)."
   },
-  "body": [
-    {
-      "type": "task",
-      "text": "Створити головний екран застосунку згідно Варіанту 1 («Менеджер завдань») з використанням віджетів Scaffold, AppBar, Center з ElevatedButton(\"Додати завдання\") та BottomNavigationBar із двома пунктами («Список» та іконка задачі)."
-    },
-    {
-      "type": "code",
-      "label": "1 Написання коду-розв’язку завдання:",
-      "numbered": false,
-      "text": "import 'package:flutter/material.dart';\n\nvoid main() {\n  runApp(const MyApp());\n}\n\nclass MyApp extends StatelessWidget {\n  const MyApp({super.key});\n\n  @override\n  Widget build(BuildContext context) {\n    return MaterialApp(\n      title: 'Менеджер завдань',\n      debugShowCheckedModeBanner: false,\n      theme: ThemeData(\n        useMaterial3: true,\n        colorScheme: ColorScheme.fromSeed(\n          seedColor: const Color(0xFFD4FF00),\n          brightness: Brightness.dark,\n          primary: const Color(0xFFD4FF00),\n          surface: const Color(0xFF15181F),\n        ),\n        scaffoldBackgroundColor: const Color(0xFF0D0F13),\n      ),\n      home: const HomeScreen(),\n    );\n  }\n}\n\nclass HomeScreen extends StatefulWidget {\n  const HomeScreen({super.key});\n\n  @override\n  State<HomeScreen> createState() => _HomeScreenState();\n}\n\nclass _HomeScreenState extends State<HomeScreen> {\n  int _currentIndex = 0;\n\n  void _onAddTaskPressed() {\n    ScaffoldMessenger.of(context).showSnackBar(\n      SnackBar(\n        content: const Text(\n          'Нове завдання успішно додано!',\n          style: TextStyle(color: Color(0xFF0D0F13), fontWeight: FontWeight.bold),\n        ),\n        backgroundColor: const Color(0xFFD4FF00),\n        behavior: SnackBarBehavior.floating,\n        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),\n        duration: const Duration(seconds: 2),\n      ),\n    );\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n      appBar: AppBar(\n        title: const Text('Менеджер завдань'),\n        centerTitle: true,\n        backgroundColor: const Color(0xFF15181F),\n      ),\n      body: Center(\n        child: ElevatedButton(\n          onPressed: _onAddTaskPressed,\n          style: ElevatedButton.styleFrom(\n            backgroundColor: const Color(0xFFD4FF00),\n            foregroundColor: const Color(0xFF0D0F13),\n            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),\n            textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),\n            shape: RoundedRectangleBorder(\n              borderRadius: BorderRadius.circular(12),\n            ),\n          ),\n          child: const Text('Додати завдання'),\n        ),\n      ),\n      bottomNavigationBar: BottomNavigationBar(\n        currentIndex: _currentIndex,\n        selectedItemColor: const Color(0xFFD4FF00),\n        unselectedItemColor: Colors.grey,\n        backgroundColor: const Color(0xFF15181F),\n        onTap: (index) {\n          setState(() {\n            _currentIndex = index;\n          });\n        },\n        items: const [\n          BottomNavigationBarItem(\n            icon: Icon(Icons.list_alt),\n            label: 'Список',\n          ),\n          BottomNavigationBarItem(\n            icon: Icon(Icons.task_alt),\n            label: 'Завдання',\n          ),\n        ],\n      ),\n    );\n  }\n}"
-    },
-    {
-      "type": "result",
-      "label": "2 Результат виконання коду:",
-      "numbered": false,
-      "images": [
-        "Lab_2/assets/emulator_duo.png"
-      ]
-    },
-    {
-      "type": "text",
-      "text": "1. Що таке віджет у Flutter? Віджет — це базовий будівельний блок інтерфейсу користувача у Flutter, який описує його конфігурацію, візуальний вигляд та поведінку (поділяються на StatelessWidget без власного стану та StatefulWidget зі станом)."
-    },
-    {
-      "type": "text",
-      "text": "2. Яке призначення віджета Scaffold? Scaffold реалізує базову візуальну структуру екрана Material Design, надаючи стандартні слоти для розміщення верхньої панелі (appBar), основного вмісту (body), плаваючої кнопки (floatingActionButton) та нижньої навігації (bottomNavigationBar)."
-    },
-    {
-      "type": "text",
-      "text": "3. Для чого використовується AppBar у Flutter? Він слугує верхньою панеллю інструментів екрана для відображення заголовка поточної сторінки, кнопок переходу назад та виклику додаткових дій користувача (actions)."
-    },
-    {
-      "type": "text",
-      "text": "4. Які елементи інтерфейсу можуть розміщуватися у властивості body віджета Scaffold? У властивості body можна розмістити будь-який віджет Flutter: поодинокі елементи (Center, Container, Text, Image), кнопки (ElevatedButton) або складені макети зі списком елементів (Column, Row, ListView)."
-    },
-    {
-      "type": "text",
-      "text": "5. Яке призначення віджета ElevatedButton і як обробляється натискання на кнопку? ElevatedButton — це стандартна кнопка з фоновим кольором і тінню, натискання якої обробляється викликом колбек-функції у властивості onPressed (якщо передано null, кнопка стає неактивною)."
-    },
-    {
-      "type": "text",
-      "text": "6. Для чого використовується BottomNavigationBar? BottomNavigationBar слугує нижньою панеллю навігації для швидкого перемикання між основними розділами або вкладками застосунку в межах одного екрана."
-    },
-    {
-      "type": "text",
-      "text": "7. Які обовʼязкові елементи містить навігаційна панель BottomNavigationBar? Вона обов'язково повинна містити список items щонайменше з двох елементів BottomNavigationBarItem із заданими властивостями icon та label."
-    },
-    {
-      "type": "text",
-      "text": "8. Чим відрізняється текстовий пункт BottomNavigationBarItem від пункту з іконкою або зображенням? Текстовий пункт використовує іконку тексту або стандартний текстовий підпис label, тоді як пункт із зображенням замість іконки зі шрифту Icon передає віджет зображення Image (Image.asset або Image.network)."
-    },
-    {
-      "type": "text",
-      "text": "9. Для чого використовуються віджети Container, Padding та SizedBox? Container використовується для комплексного позиціонування, фону, меж і відступів; Padding — виключно для додавання внутрішніх відступів навколо віджета; а SizedBox — для задання фіксованих розмірів або проміжків."
-    }
-  ],
-  "conclusion": "На цій лабораторній роботі, я опанував базову структуру Flutter-проєкту та компоненти Flutter UI, реалізував головний екран за Варіантом 1 («Менеджер завдань») із використанням віджетів Scaffold, AppBar, Center з кнопкою ElevatedButton та BottomNavigationBar, а також перевірив роботу інтерфейсу на емуляторі Android."
+  {
+   "type": "code",
+   "label": "1 Написання коду-розв’язку завдання:",
+   "numbered": false,
+   "text": "class _HomeScreenState extends State<HomeScreen> {\n  int _currentIndex = 0;\n\n  void _onAddTaskPressed() {\n    ScaffoldMessenger.of(context).showSnackBar(\n      SnackBar(content: const Text('Нове завдання успішно додано!')),\n  // ... (пропуск неістотних рядків)\n  }\n\n  @override\n  Widget build(BuildContext context) {\n    return Scaffold(\n  // ... (пропуск неістотних рядків)\n      bottomNavigationBar: BottomNavigationBar(\n        currentIndex: _currentIndex,\n        onTap: (index) {\n          setState(() {\n            _currentIndex = index;\n          });\n        },\n  // ... (пропуск неістотних рядків)\n  }\n}"
+  },
+  {
+   "type": "result",
+   "label": "2 Результат виконання коду:",
+   "numbered": false,
+   "images": [
+    "Lab_2/assets/emulator_duo.png"
+   ]
+  },
+  {
+   "type": "text",
+   "text": "1. Що таке віджет у Flutter? Віджет — це базовий будівельний блок інтерфейсу користувача у Flutter, який описує його конфігурацію, візуальний вигляд та поведінку (поділяються на StatelessWidget без власного стану та StatefulWidget зі станом)."
+  },
+  {
+   "type": "text",
+   "text": "2. Яке призначення віджета Scaffold? Scaffold реалізує базову візуальну структуру екрана Material Design, надаючи стандартні слоти для розміщення верхньої панелі (appBar), основного вмісту (body), плаваючої кнопки (floatingActionButton) та нижньої навігації (bottomNavigationBar)."
+  },
+  {
+   "type": "text",
+   "text": "3. Для чого використовується AppBar у Flutter? Він слугує верхньою панеллю інструментів екрана для відображення заголовка поточної сторінки, кнопок переходу назад та виклику додаткових дій користувача (actions)."
+  },
+  {
+   "type": "text",
+   "text": "4. Які елементи інтерфейсу можуть розміщуватися у властивості body віджета Scaffold? У властивості body можна розмістити будь-який віджет Flutter: поодинокі елементи (Center, Container, Text, Image), кнопки (ElevatedButton) або складені макети зі списком елементів (Column, Row, ListView)."
+  },
+  {
+   "type": "text",
+   "text": "5. Яке призначення віджета ElevatedButton і як обробляється натискання на кнопку? ElevatedButton — це стандартна кнопка з фоновим кольором і тінню, натискання якої обробляється викликом колбек-функції у властивості onPressed (якщо передано null, кнопка стає неактивною)."
+  },
+  {
+   "type": "text",
+   "text": "6. Для чого використовується BottomNavigationBar? BottomNavigationBar слугує нижньою панеллю навігації для швидкого перемикання між основними розділами або вкладками застосунку в межах одного екрана."
+  },
+  {
+   "type": "text",
+   "text": "7. Які обовʼязкові елементи містить навігаційна панель BottomNavigationBar? Вона обов'язково повинна містити список items щонайменше з двох елементів BottomNavigationBarItem із заданими властивостями icon та label."
+  },
+  {
+   "type": "text",
+   "text": "8. Чим відрізняється текстовий пункт BottomNavigationBarItem від пункту з іконкою або зображенням? Текстовий пункт використовує іконку тексту або стандартний текстовий підпис label, тоді як пункт із зображенням замість іконки зі шрифту Icon передає віджет зображення Image (Image.asset або Image.network)."
+  },
+  {
+   "type": "text",
+   "text": "9. Для чого використовуються віджети Container, Padding та SizedBox? Container використовується для комплексного позиціонування, фону, меж і відступів; Padding — виключно для додавання внутрішніх відступів навколо віджета; а SizedBox — для задання фіксованих розмірів або проміжків."
+  }
+ ],
+ "conclusion": "На цій лабораторній роботі, я опанував базову структуру Flutter-проєкту та компоненти Flutter UI, реалізував головний екран за Варіантом 1 («Менеджер завдань») із використанням віджетів Scaffold, AppBar, Center з кнопкою ElevatedButton та BottomNavigationBar, а також перевірив роботу інтерфейсу на емуляторі Android."
 }
