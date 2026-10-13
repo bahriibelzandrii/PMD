@@ -536,11 +536,6 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
             onPressed: _resetToAssets,
           ),
           IconButton(
-            tooltip: 'Вийти з акаунта',
-            icon: Icon(Icons.logout, color: AppColors.textSecondary(isDark)),
-            onPressed: () => Navigator.pop(context),
-          ),
-          IconButton(
             tooltip: 'Профіль користувача',
             icon: Icon(
               Icons.person_outline,

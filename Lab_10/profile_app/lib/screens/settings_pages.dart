@@ -204,43 +204,68 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
         _SettingsCard(
           title: 'Основна інформація',
           children: [
-            TextField(
-              controller: _nameCtrl,
-              style: TextStyle(color: AppColors.text(isDark)),
-              decoration: InputDecoration(
-                labelText: 'Ім’я та прізвище',
-                prefixIcon: Icon(
-                  Icons.person_outline,
-                  color: AppColors.textSecondary(isDark),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+              child: Text(
+                'Ім’я та прізвище',
+                style: AppStyles.caption(isDark: isDark),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                controller: _nameCtrl,
+                style: TextStyle(color: AppColors.text(isDark)),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.person_outline,
+                    color: AppColors.textSecondary(isDark),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+              child: Text('Email', style: AppStyles.caption(isDark: isDark)),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                controller: _emailCtrl,
+                style: TextStyle(color: AppColors.text(isDark)),
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.alternate_email,
+                    color: AppColors.textSecondary(isDark),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+              child: Text(
+                'Біографія',
+                style: AppStyles.caption(isDark: isDark),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                controller: _bioCtrl,
+                maxLines: 2,
+                style: TextStyle(color: AppColors.text(isDark)),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.notes,
+                    color: AppColors.textSecondary(isDark),
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 12),
-            TextField(
-              controller: _emailCtrl,
-              style: TextStyle(color: AppColors.text(isDark)),
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                prefixIcon: Icon(
-                  Icons.alternate_email,
-                  color: AppColors.textSecondary(isDark),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _bioCtrl,
-              maxLines: 2,
-              style: TextStyle(color: AppColors.text(isDark)),
-              decoration: InputDecoration(
-                labelText: 'Біографія',
-                prefixIcon: Icon(
-                  Icons.notes,
-                  color: AppColors.textSecondary(isDark),
-                ),
-              ),
-            ),
           ],
         ),
         ElevatedButton.icon(
