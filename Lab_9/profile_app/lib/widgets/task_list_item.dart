@@ -83,7 +83,7 @@ class TaskListItem extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: isDone
-                      ? AppColors.primary.withValues(alpha: 0.15)
+                      ? AppColors.accent(isDark).withValues(alpha: 0.15)
                       : AppColors.secondary.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(4),
                 ),
@@ -92,7 +92,7 @@ class TaskListItem extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
-                    color: isDone ? AppColors.primary : AppColors.secondary,
+                    color: isDone ? AppColors.accent(isDark) : AppColors.secondary,
                   ),
                 ),
               ),
@@ -118,7 +118,7 @@ class TaskListItem extends StatelessWidget {
                 icon: Icon(
                   isDone ? Icons.check_circle : Icons.radio_button_unchecked,
                   color: isDone
-                      ? AppColors.primary
+                      ? AppColors.accent(isDark)
                       : AppColors.textSecondary(isDark),
                   size: 20,
                 ),

@@ -31,11 +31,11 @@ class WelcomeScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.card(isDark),
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.primary, width: 2),
+                  border: Border.all(color: AppColors.accent(isDark), width: 2),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.task_alt,
-                  color: AppColors.primary,
+                  color: AppColors.accent(isDark),
                   size: 48,
                 ),
               ),
@@ -61,8 +61,8 @@ class WelcomeScreen extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.onPrimary,
+                    backgroundColor: AppColors.accent(isDark),
+                    foregroundColor: AppColors.onAccent(isDark),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -97,8 +97,8 @@ class WelcomeScreen extends StatelessWidget {
                 height: 52,
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primary,
-                    side: const BorderSide(color: AppColors.primary),
+                    foregroundColor: AppColors.accent(isDark),
+                    side: BorderSide(color: AppColors.accent(isDark)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),

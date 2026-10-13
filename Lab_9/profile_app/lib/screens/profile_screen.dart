@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_styles.dart';
 
+import 'settings_pages.dart';
+
 /// Екран профілю користувача ProfileScreen (п. 6 ТЗ)
 class ProfileScreen extends StatelessWidget {
   /// Ім'я користувача (п. 6 ТЗ)
@@ -40,13 +42,6 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppColors.card(isDark),
         elevation: 0,
-        actions: [
-          IconButton(
-            tooltip: 'Вийти з облікового запису',
-            icon: Icon(Icons.logout, size: 20, color: AppColors.error),
-            onPressed: () => _confirmLogout(context, isDark),
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -73,31 +68,6 @@ class ProfileScreen extends StatelessWidget {
               _buildOptionsCard(context, isDark),
 
               const SizedBox(height: 20),
-
-              // 5. Кнопка редагування профілю
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.onPrimary,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                icon: const Icon(Icons.edit_outlined, size: 20),
-                label: const Text(
-                  'Редагувати профіль',
-                  style: AppStyles.button,
-                ),
-                onPressed: () {
-                  _showSnackBar(
-                    context,
-                    'Режим редагування профілю активовано',
-                  );
-                },
-              ),
-
-              const SizedBox(height: 10),
 
               // 6. Кнопка виходу
               OutlinedButton.icon(
@@ -136,10 +106,10 @@ class ProfileScreen extends StatelessWidget {
           height: 84,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [AppColors.primary, AppColors.secondary],
+              colors: [AppColors.accent(isDark), AppColors.secondary],
             ),
           ),
           child: Center(
@@ -218,9 +188,9 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.school_outlined,
-                color: AppColors.primary,
+                color: AppColors.accent(isDark),
                 size: 18,
               ),
               const SizedBox(width: 8),
@@ -249,7 +219,7 @@ class ProfileScreen extends StatelessWidget {
                 'Лабораторна',
                 '№9',
                 isDark,
-                color: AppColors.primary,
+                color: AppColors.accent(isDark),
               ),
               const SizedBox(width: 8),
               _buildStatItem(
@@ -319,8 +289,7 @@ class ProfileScreen extends StatelessWidget {
         secondary: Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: (isDark ? AppColors.secondary : AppColors.primary)
-                .withValues(alpha: 0.15),
+            color: AppColors.accent(isDark).withValues(alpha: 0.15),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -421,9 +390,7 @@ class ProfileScreen extends StatelessWidget {
               color: isDark ? AppColors.textSecondaryDark : AppColors.grey,
               size: 20,
             ),
-            onTap: () {
-              _showSnackBar(context, 'Обрано: ${opt['title']}');
-            },
+            onTap: () => _openOptionPage(context, index),
           );
         },
       ),
@@ -442,6 +409,25 @@ class ProfileScreen extends StatelessWidget {
         duration: const Duration(seconds: 2),
       ),
     );
+  }
+
+  // Перехід на реальні сторінки налаштувань (навігація між екранами)
+  void _openOptionPage(BuildContext context, int index) {
+    final Widget page;
+    switch (index) {
+      case 0:
+        page = PersonalDataPage(
+          name: username ?? 'Багрій-Белз Андрій',
+          email: email ?? 'andrii.bagriy@nulp.ua',
+        );
+      case 1:
+        page = const SecurityPage();
+      case 2:
+        page = const NotificationsPage();
+      default:
+        page = const AppSettingsPage();
+    }
+    Navigator.push(context, MaterialPageRoute(builder: (_) => page));
   }
 
   void _confirmLogout(BuildContext context, bool isDark) {

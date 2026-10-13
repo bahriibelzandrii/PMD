@@ -31,7 +31,7 @@ class StatsSummaryCard extends StatelessWidget {
             children: [
               Icon(
                 Icons.analytics_outlined,
-                color: AppColors.primary,
+                color: AppColors.accent(isDark),
                 size: 18,
               ),
               const SizedBox(width: 8),
@@ -67,7 +67,7 @@ class StatsSummaryCard extends StatelessWidget {
                 label: 'Виконано',
                 value: '$done',
                 icon: Icons.check_circle_outline,
-                color: AppColors.primary,
+                color: AppColors.accent(isDark),
               ),
               const SizedBox(width: 8),
               _buildStatItem(
