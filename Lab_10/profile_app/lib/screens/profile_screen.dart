@@ -119,33 +119,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               const SizedBox(height: 20),
 
-              // 5. Кнопка редагування профілю (чорний текст на акценті)
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.accent(isDark),
-                  foregroundColor: AppColors.onAccent(isDark),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                icon: const Icon(Icons.edit_outlined, size: 20),
-                label: Text(
-                  'Редагувати профіль',
-                  style: AppStyles.button.copyWith(
-                    color: AppColors.onAccent(isDark),
-                  ),
-                ),
-                onPressed: () {
-                  _showSnackBar(
-                    context,
-                    'Режим редагування профілю активовано',
-                  );
-                },
-              ),
-
-              const SizedBox(height: 10),
-
               // 6. Кнопка виходу
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
@@ -641,20 +614,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         page = const AppSettingsPage();
     }
     Navigator.push(context, MaterialPageRoute(builder: (_) => page));
-  }
-
-  void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: const TextStyle(fontFamily: AppStyles.fontFamily),
-        ),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 
   void _confirmLogout(BuildContext context, bool isDark) {
